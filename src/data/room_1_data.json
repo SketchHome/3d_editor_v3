@@ -1,0 +1,62 @@
+{
+    "showroom": {
+        "wall": [
+            {
+                "type": "horizon",
+                "direction": "top",
+                "length": 11,
+                "position": 3.5,
+                "id": "wall_0"
+            },
+            {
+                "type": "horizon",
+                "direction": "bottom",
+                "length": 11,
+                "position": -3.5,
+                "id": "wall_1"
+            },
+            {
+                "type": "vertical",
+                "direction": "right",
+                "length": 7,
+                "position": 5.5,
+                "id": "wall_2"
+            },
+            {
+                "type": "vertical",
+                "direction": "left",
+                "length": 7,
+                "position": -5.5,
+                "id": "wall_3"
+            }
+        ],
+        "door": [
+            {
+                "type": "horizon",
+                "direction": "bottom",
+                "length": 1.5,
+                "position": -3.5,
+                "belong": "wall_1",
+                "id": "door_0"
+            }
+        ],
+        "window": [
+            {
+                "type": "vertical",
+                "direction": "left",
+                "length": 1.5,
+                "position": -5.5,
+                "belong": "wall_3",
+                "id": "window_0"
+            }
+        ],
+        "item": [
+            {
+                "type": "big",
+                "size": {"x": 4, "y": 2, "z": 1},
+                "position": {"x": 0, "y": 0, "z": 0},
+                "id": "item_0"
+            }
+        ]
+    }
+}

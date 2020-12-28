@@ -1,0 +1,25 @@
+.item_list_wrapper {
+    height: 500px;
+    overflow: auto;
+}
+td {
+    border: 1px solid #444444;
+}
+table {
+    border-collapse: collapse;
+}
+.td_image {
+    width: 70px;
+    height: 70px;
+    background-color: white;
+}
+.td_name {
+    width: 130px;
+    height: 50px;
+    background-color: white;
+    color: black;
+    text-align: center;
+}
+.td_image img {
+    width: 100%;
+}
