@@ -2,7 +2,9 @@ import React, { Component } from "react";
 
 import Scene from './Scene'
 
-import room_data from '../data/room_1_data.json';
+import './Editor.css';
+
+import room_data from '../../data/room_1_data.json';
 
 class Editor extends Component {
 	constructor(props) {

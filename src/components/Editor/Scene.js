@@ -6,6 +6,7 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
 import ItemList from './ItemList/ItemList'
 
+import './Scene.css'
 
 /*
  * 위 컴포넌트는 3d 모델링 대용 컴포넌트입니다. 
@@ -49,7 +50,7 @@ class Scene extends Component {
 		const renderer = new THREE.WebGLRenderer({ antialias: true })
 		this.mount.appendChild(renderer.domElement)
 
-		const grid = new THREE.GridHelper(15, 15)
+		// const grid = new THREE.GridHelper(15, 15)
 		const controls = new OrbitControls(camera, renderer.domElement)
 		controls.enabled = false
 
@@ -65,10 +66,10 @@ class Scene extends Component {
 		dragControls.addEventListener('dragstart', () => { console.log(activateObjects) })
 
 		const dragControls2 = new DragControls(activateItems, camera, renderer.domElement)
-		dragControls2.addEventListener('dragstart', () => { console.log(activateItems) })
+		// dragControls2.addEventListener('dragstart', () => { console.log(activateItems) })
 		dragControls2.transformGroup = true
 
-		scene.add(grid)
+		// scene.add(grid)
 		renderer.setClearColor('#ffffff')
 		renderer.setSize(width, height)
 
@@ -83,6 +84,30 @@ class Scene extends Component {
 		this.addObjects(2)
 
 		this.test_load()
+
+		const raycaster = new THREE.Raycaster()
+		const mouse = new THREE.Vector2()
+		this.raycaster = raycaster
+		this.mouse = mouse
+		window.addEventListener('mousemove', this.onMouseMove, false)
+		// window.addEventListener('mouseup', this.onMouseMove, false)
+		// window.addEventListener('mousedown', this.onMouseMove, false)
+	}
+
+	onMouseMove = (event) => {
+		event.preventDefault()
+		this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+		this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+		// this.raycaster.setFromCamera(this.mouse, this.camera)
+		// const intersects = this.raycaster.intersectObjects(this.scene.children)
+
+		// console.log(this.scene.children)
+		// console.log(intersects)
+		// if (intersects.length > 0)
+		// 	for (var i = 0; i < intersects.length; i++)
+		// 		console.log(intersects[i].object)
+		// intersects[0].object.material.color.setHex(Math.random() * 0xffffff)
 	}
 
 	test_load = () => {
@@ -96,11 +121,6 @@ class Scene extends Component {
 				object.scale.set(0.007, 0.007, 0.007);
 				this.scene.add(object);
 				this.activateItems.push(object);
-				console.log(this.scene);
-				// const el = this.scene.getObjectByName("Elephant_4");
-
-				// el.position.set(0, -150,0 );
-				// el.material.color.set(0x50C878);
 			},
 			// called when loading is in progresses
 			(xhr) => {
@@ -116,6 +136,16 @@ class Scene extends Component {
 
 	animate() {
 		requestAnimationFrame(this.animate)
+
+		this.raycaster.setFromCamera(this.mouse, this.camera)
+		const intersects = this.raycaster.intersectObjects(this.scene.children)
+
+		if (intersects.length > 0) {
+			// console.log(this.scene.children)
+			console.log(intersects)
+		}
+
+
 		this.renderer.render(this.scene, this.camera)
 	}
 
@@ -128,7 +158,7 @@ class Scene extends Component {
 		const wall = this.props.wall.map(wall => this.wallMesh(dimension, wall.type, wall.length, wall.position))
 		const window = this.props.window.map(window => this.windowMesh(dimension, window.type, window.length, window.position))
 		const door = this.props.door.map(door => this.doorMesh(dimension, door.type, door.length, door.position))
-		const item = this.props.item.map(item => this.itemMesh(dimension, item.size, item.position))
+		// const item = this.props.item.map(item => this.itemMesh(dimension, item.size, item.position))
 
 		wall.forEach((wall) => {
 			this.scene.add(wall)
@@ -343,22 +373,23 @@ class Scene extends Component {
 		})
 	}
 
+
 	render() {
 		return (
 			<div>
+				<ItemList />
 				<div
-					style={{ width: '1000px', height: '500px', float: 'left' }}
+					className="Scene"
 					ref={(mount) => { this.mount = mount }}
 				/>
-				<ItemList />
 				<div>
 					<div>
-						<button onClick={this.change2DMode} style={{ width: '100px'}}>2D Mode</button>
-						<button onClick={this.change3DMode} style={{ width: '100px'}}>3D Mode</button>
+						<button onClick={this.change2DMode} style={{ width: '100px' }}>2D Mode</button>
+						<button onClick={this.change3DMode} style={{ width: '100px' }}>3D Mode</button>
 					</div>
 					<div>
-						<button onClick={this.changeZoomMode} style={{ width: '100px'}}>Zoom Mode</button>
-						<button onClick={this.changeDragMode} style={{ width: '100px'}}>Drag Mode</button>
+						<button onClick={this.changeZoomMode} style={{ width: '100px' }}>Zoom Mode</button>
+						<button onClick={this.changeDragMode} style={{ width: '100px' }}>Drag Mode</button>
 					</div>
 				</div>
 			</div>
