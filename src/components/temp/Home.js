@@ -9,7 +9,7 @@ class Home extends Component {
 	render() {
 		return (
 			<div className="Home">
-                <TopMenu />
+                {/* <TopMenu /> */}
                 <Editor />
 			</div>
 		);

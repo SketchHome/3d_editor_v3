@@ -50,7 +50,6 @@ class Scene extends Component {
 		const renderer = new THREE.WebGLRenderer({ antialias: true })
 		this.mount.appendChild(renderer.domElement)
 
-		// const grid = new THREE.GridHelper(15, 15)
 		const controls = new OrbitControls(camera, renderer.domElement)
 		controls.enabled = false
 
@@ -62,13 +61,11 @@ class Scene extends Component {
 			door: [],
 			item: []
 		}
-		const dragControls = new DragControls(activateObjects, camera, renderer.domElement)
-		dragControls.addEventListener('dragstart', () => { console.log(activateObjects) })
+		let dragObject = []
+		const dragControls = new DragControls(dragObject, camera, renderer.domElement)
+		dragControls.transformGroup = true
 
-		const dragControls2 = new DragControls(activateItems, camera, renderer.domElement)
-		// dragControls2.addEventListener('dragstart', () => { console.log(activateItems) })
-		dragControls2.transformGroup = true
-
+		const grid = new THREE.GridHelper(15, 15)
 		// scene.add(grid)
 		renderer.setClearColor('#ffffff')
 		renderer.setSize(width, height)
@@ -80,17 +77,24 @@ class Scene extends Component {
 		this.activateItems = activateItems
 		this.objects = objects
 		this.renderer = renderer
+		this.dragObject = []
+		
+		// this.addObjects(2)
 
-		this.addObjects(2)
-
-		this.test_load()
+		// this.test_load()
+		var geometry = new THREE.BoxGeometry();
+		var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+		var cube = new THREE.Mesh(geometry, material);
+		scene.add(cube);
 
 		const raycaster = new THREE.Raycaster()
 		const mouse = new THREE.Vector2()
 		this.raycaster = raycaster
 		this.mouse = mouse
-		window.addEventListener('mousemove', this.onMouseMove, false)
-		// window.addEventListener('mouseup', this.onMouseMove, false)
+
+		// window.addEventListener('mousemove', this.onMouseMove, false)
+
+		window.addEventListener('mouseup', this.onMouseMove, false)
 		// window.addEventListener('mousedown', this.onMouseMove, false)
 	}
 
@@ -99,15 +103,29 @@ class Scene extends Component {
 		this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 		this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-		// this.raycaster.setFromCamera(this.mouse, this.camera)
-		// const intersects = this.raycaster.intersectObjects(this.scene.children)
-
-		// console.log(this.scene.children)
-		// console.log(intersects)
-		// if (intersects.length > 0)
-		// 	for (var i = 0; i < intersects.length; i++)
-		// 		console.log(intersects[i].object)
-		// intersects[0].object.material.color.setHex(Math.random() * 0xffffff)
+		this.raycaster.setFromCamera(this.mouse, this.camera);
+		const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+		console.log(this.mouse.x, this.mouse.y, this.scene.children)
+		console.log(this.dragObject)
+		if (intersects.length > 0) {
+			if (this.dragObject.length == 0) {
+				if (intersects[0].object.parent.type === "Scene") {
+					this.dragObject.push(intersects[0].object);
+					intersects[0].object.material.color.set(Math.random() * 0xff0000);
+					console.log("capture objects: ", intersects[0].object);
+					console.log("capture target: ", this.dragObject)
+				}
+				else if (intersects[0].object.parent.type === "Group") {
+					console.log(intersects[0].object)
+					this.dragObject.push(intersects[0].object.parent);
+					console.log("capture objects: ", intersects[0].object.parent);
+				}
+			}
+		}
+		else {
+			const obj = this.dragObject.pop()
+			console.log("drag out obj: ", obj);
+		}
 	}
 
 	test_load = () => {
@@ -136,15 +154,6 @@ class Scene extends Component {
 
 	animate() {
 		requestAnimationFrame(this.animate)
-
-		this.raycaster.setFromCamera(this.mouse, this.camera)
-		const intersects = this.raycaster.intersectObjects(this.scene.children)
-
-		if (intersects.length > 0) {
-			// console.log(this.scene.children)
-			console.log(intersects)
-		}
-
 
 		this.renderer.render(this.scene, this.camera)
 	}
@@ -377,12 +386,12 @@ class Scene extends Component {
 	render() {
 		return (
 			<div>
-				<ItemList />
+				{/* <ItemList /> */}
 				<div
 					className="Scene"
 					ref={(mount) => { this.mount = mount }}
 				/>
-				<div>
+				{/* <div>
 					<div>
 						<button onClick={this.change2DMode} style={{ width: '100px' }}>2D Mode</button>
 						<button onClick={this.change3DMode} style={{ width: '100px' }}>3D Mode</button>
@@ -391,7 +400,7 @@ class Scene extends Component {
 						<button onClick={this.changeZoomMode} style={{ width: '100px' }}>Zoom Mode</button>
 						<button onClick={this.changeDragMode} style={{ width: '100px' }}>Drag Mode</button>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		)
 	}
