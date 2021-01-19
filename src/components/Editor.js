@@ -1,13 +1,13 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 
-import * as THREE from "three"
+import * as THREE from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import { setMouseEvent, setButtonEvent } from "./module/_event";
-import { addLoadObj, addWalls, addWindows, addDoors } from "./module/_addObject"
+import { setMouseEvent, setButtonEvent, setInputEvent } from "./module/_event";
+import { addLoadObj, addRoom } from "./module/_addObject";
 
-import room_data from "../data/room_1_data.json"
+import room_data from "../data/room_1_data.json";
 
 class Editor extends Component {
 	componentDidMount() {
@@ -39,15 +39,17 @@ class Editor extends Component {
 		dragControls.transformGroup = true;
 
 		// add something
-		addWalls(scene, room_data.showroom.wall, 2);
-		addWindows(scene, room_data.showroom.window, 2);
-		addDoors(scene, room_data.showroom.door, 2);
-		addLoadObj(scene, "Zuccarello.obj");
-		// addSquare(scene);
+		const room = new THREE.Group();
+		room.name = "room";
+		addRoom(room, room_data.room, 2);
+		addLoadObj(room, "Zuccarello.obj");
+
+		scene.add(room);
 
 		// set event
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target);
-		setButtonEvent(view_mode, camera, controls, scene);
+		setButtonEvent(view_mode, camera, controls, scene, target, drag_target, room);
+		setInputEvent(scene);
 
 		const animate = function () {
 			requestAnimationFrame(animate);
@@ -65,14 +67,34 @@ class Editor extends Component {
 					ref={(mount) => { this.mount = mount }} />
 				<div>
 					<div>
-						<div>target: <span id="target_name"></span></div>
 						<div>mode: <span id="mode_name"></span></div>
+						<button id="2D_MODE_btn" style={{width:"120px"}}>2D MODE</button>
+						<button id="3D_MODE_btn" style={{width:"120px"}}>3D MODE</button>
+						<br/>
+						<button id="EDIT_MODE_btn" style={{width:"120px"}}>EDIT MODE</button>
+						<button id="ZOOM_MODE_btn" style={{width:"120px"}}>ZOOM MODE</button>
 					</div>
+					<br/>
 					<div>
-						<button id="2D_MODE_btn">2D MODE</button>
-						<button id="3D_MODE_btn">3D MODE</button>
-						<button id="DRAG_MODE_btn">DRAG MODE</button>
-						<button id="ZOOM_MODE_btn">ZOOM MODE</button>
+						<div>target: <span id="target_name"></span></div>
+						<button id="REMOVE_btn" style={{width:"120px"}}>REMOVE</button>
+						<button id="ROTATE_btn" style={{width:"120px"}}>ROTATE</button>
+					</div>
+					<br/>
+					<div>
+						Show Room Size
+						<table>
+							<tbody>
+								<tr>
+									<td>width: </td>
+									<td><input id="resize_width" style={{width:"100px"}} type="range" step="0.1" min="3" max="20" defaultValue="11"/></td>
+								</tr>
+								<tr>
+									<td>height: </td>
+									<td><input id="resize_height" style={{width:"100px"}} type="range" step="0.1" min="3" max="20" defaultValue="7"/></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>

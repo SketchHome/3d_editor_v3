@@ -1,76 +1,132 @@
-import * as THREE from 'three'
+import * as THREE from 'three';
 
-export const createWallMesh = (dimension, type, length, position) => {
-    const material = new THREE.MeshBasicMaterial({ color: 'orange' });
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const wall_mesh = new THREE.Mesh(geometry, material);
-
-    const height = (dimension === 2) ? 0.0001 : 2;
-    const y_position = (dimension === 2) ? 0 : height / 2;
-
+export const createWallMesh = (id, type, direction, room_size, dim) => {
+    // set size
+    const size = new THREE.Vector3();
+    const thick = 0.1;
     switch (type) {
         case 'horizon':
-        default:
-            wall_mesh.scale.set(length, height, 0.1);
-            wall_mesh.position.set(0, y_position, position);
+            size.set(room_size.x, room_size.y, thick);
             break;
         case 'vertical':
-            wall_mesh.scale.set(0.1, height, length);
-            wall_mesh.position.set(position, y_position, 0);
+            size.set(thick, room_size.y, room_size.z);
+            break;
+        default:
             break;
     }
 
-    wall_mesh.name = "wall";
+    const material = new THREE.MeshBasicMaterial({ color: 'orange' });
+    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+    const wall_mesh = new THREE.Mesh(geometry, material);
+
+    // set position
+    const position = new THREE.Vector3();
+    switch (direction) {
+        case 'top':
+            position.set(0, 0, room_size.z/2);
+            break;
+        case 'bottom':
+            position.set(0, 0, -room_size.z/2);
+            break;
+        case 'right':
+            position.set(room_size.x/2, 0, 0);
+            break;
+        case 'left':
+            position.set(-room_size.x/2, 0, 0);
+            break;
+        default:
+            break;
+    }
+    wall_mesh.position.set(position.x, position.y, position.z);
+    wall_mesh.name = `${id}_${type}_${direction}`;
+
+    // set dimension
+    switch (dim) {
+        case 2:
+            wall_mesh.scale.setY(0.001);
+            wall_mesh.position.setY(0);
+            break;
+        case 3:
+            wall_mesh.scale.setY(1);
+            wall_mesh.position.setY(size.y/2);
+            break;
+        default:
+            break;
+    }
 
     return wall_mesh;
 };
 
-export const createWindowMesh = (dimension, type, length, position) => {
+export const createWindowMesh = (id, size, position, type, wall_position, dim) => {
     const material = new THREE.MeshBasicMaterial({ color: '#006633' });
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
     const window_mesh = new THREE.Mesh(geometry, material);
-
-    const height = (dimension === 2) ? 0.0001 : 1;
-    const y_position = (dimension === 2) ? 0 : 1;
-
+    
     switch (type) {
         case 'horizon':
-        default:
-            window_mesh.scale.set(length, height, 0.3);
-            window_mesh.position.set(0, y_position, position);
+            window_mesh.position.setX(position.x);
+            window_mesh.position.setZ(wall_position.z);
             break;
         case 'vertical':
-            window_mesh.scale.set(0.3, height, length);
-            window_mesh.position.set(position, y_position, 0);
+            window_mesh.position.setX(wall_position.x);
+            window_mesh.position.setZ(position.x);
+            window_mesh.rotation.y = Math.PI / 2;
+            break;
+        default:
             break;
     }
 
-    window_mesh.name = "window";
+    switch (dim) {
+        case 2:
+            window_mesh.scale.setY(0.001);
+            window_mesh.position.setY(0.001);
+            break;
+        case 3:
+            window_mesh.scale.setY(1);
+            window_mesh.position.setY(position.y);
+            break;
+        default:
+            break;
+    }
+
+    window_mesh.name = `${id}_${position.y}`;
 
     return window_mesh;
 }
 
-export const createDoorMesh = (dimension, type, length, position) => {
+export const createDoorMesh = (id, size, position, type, wall_position, dim) => {
     const material = new THREE.MeshBasicMaterial({ color: '#6600CC' });
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
     const door_mesh = new THREE.Mesh(geometry, material);
-
-    const height = (dimension === 2) ? 0.0001 : 2;
-    const y_position = (dimension === 2) ? 0 : height / 2;
-
+    
     switch (type) {
         case 'horizon':
-        default:
-            door_mesh.scale.set(length, height, 0.3);
-            door_mesh.position.set(0, y_position, position);
+            door_mesh.position.setX(position.x);
+            door_mesh.position.setZ(wall_position.z);
             break;
         case 'vertical':
-            door_mesh.scale.set(0.3, height, length);
-            door_mesh.position.set(position, y_position, 0);
+            door_mesh.position.setX(wall_position.x);
+            door_mesh.position.setZ(position.x);
+            door_mesh.rotation.y = Math.PI / 2;
+            break;
+        default:
             break;
     }
 
-    door_mesh.name = "door";
+    switch (dim) {
+        case 2:
+            door_mesh.scale.setY(0.001);
+            door_mesh.position.setY(0.001);
+            break;
+        case 3:
+            door_mesh.scale.setY(1);
+            door_mesh.position.setY(size.y/2);
+            break;
+        default:
+            break;
+    }
+
+    door_mesh.name = id;
 
     return door_mesh;
 }
