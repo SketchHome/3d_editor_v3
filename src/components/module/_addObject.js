@@ -1,7 +1,6 @@
-import * as THREE from 'three'
+import * as THREE from "three"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
-import { } from "three/examples/jsm/geometries/ConvexGeometry.js"
-import { createWallMesh, createWindowMesh, createDoorMesh } from './_createMesh'
+import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh } from "./_createMesh"
 
 export const addSquare = (scene) => {
     var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -21,21 +20,31 @@ export const addSquare = (scene) => {
     scene.add(cube);
 };
 
-export const addLoadObj = (room, file_name) => {
+export const addLoadObj = (room, obj_name, size, position, id, dim) => {
     const loader = new OBJLoader();
+    const path = "./3d_data";
     loader.load(
-        file_name,
+        `${path}/${obj_name}.obj`,
         (object) => {
-            object.scale.set(0.01, 0.0001, 0.01);
-            object.name = "group_item_0";
+            if (dim === 3) {
+                object.scale.set(size.x, size.y, size.z);
+                object.position.set(position.x, position.y, position.z);
+            }
+            else if (dim === 2) {
+                object.scale.set(size.x, 0.0001, size.z);
+                object.position.set(position.x, 0.001, position.z);
+            }
+            object.name = `group_${id}`;
+            object.obj_size = { "x": size.x, "y": size.y, "z": size.z };
+            object.obj_position = { "x": position.x, "y": position.y, "z": position.z };
             object.children.forEach(child => { child.name = "load_object_part"; });
             room.add(object);
         },
         (xhr) => {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            console.log((xhr.loaded / xhr.total * 100) + "% loaded");
         },
         (error) => {
-            console.log('An error happened');
+            console.log("An error happened");
             console.log(error);
         }
     );
@@ -69,4 +78,23 @@ export const addRoom = (room_group, room, dim) => {
 
         room_group.add(wall_group);
     });
+
+    const floor_mesh = createFloorMesh(room.size);
+    const floor_group = new THREE.Group();
+    floor_group.name = "group_floor";
+    floor_group.add(floor_mesh);
+    
+    room_group.add(floor_group);
 };
+
+export const addWindow = (wall_group, id, size, position, wall_type, wall_position, dim) => {
+    const window_mesh = createWindowMesh(id ,size, position, wall_type, wall_position, dim);
+
+    wall_group.add(window_mesh);
+}
+
+export const addDoor = (wall_group, id, size, position, wall_type, wall_position, dim) => {
+    const door_mesh = createDoorMesh(id ,size, position, wall_type, wall_position, dim);
+
+    wall_group.add(door_mesh);
+}

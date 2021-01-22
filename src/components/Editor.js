@@ -7,12 +7,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { setMouseEvent, setButtonEvent, setInputEvent } from "./module/_event";
 import { addLoadObj, addRoom } from "./module/_addObject";
 
+import Detailer from "./Detailer"
+
 import room_data from "../data/room_1_data.json";
 
 class Editor extends Component {
 	componentDidMount() {
 		// === THREE.JS CODE START ===
-		
 
 		// scene setting
 		const width = this.mount.clientWidth
@@ -42,14 +43,15 @@ class Editor extends Component {
 		const room = new THREE.Group();
 		room.name = "room";
 		addRoom(room, room_data.room, 2);
-		addLoadObj(room, "Zuccarello.obj");
-
+		room_data.room.item.forEach(item => {
+			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
+		});
 		scene.add(room);
 
 		// set event
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target);
 		setButtonEvent(view_mode, camera, controls, scene, target, drag_target, room);
-		setInputEvent(scene);
+		setInputEvent(room);
 
 		const animate = function () {
 			requestAnimationFrame(animate);
@@ -65,38 +67,7 @@ class Editor extends Component {
 					className="Scene"
 					style={{ width: "900px", height: "400px" }}
 					ref={(mount) => { this.mount = mount }} />
-				<div>
-					<div>
-						<div>mode: <span id="mode_name"></span></div>
-						<button id="2D_MODE_btn" style={{width:"120px"}}>2D MODE</button>
-						<button id="3D_MODE_btn" style={{width:"120px"}}>3D MODE</button>
-						<br/>
-						<button id="EDIT_MODE_btn" style={{width:"120px"}}>EDIT MODE</button>
-						<button id="ZOOM_MODE_btn" style={{width:"120px"}}>ZOOM MODE</button>
-					</div>
-					<br/>
-					<div>
-						<div>target: <span id="target_name"></span></div>
-						<button id="REMOVE_btn" style={{width:"120px"}}>REMOVE</button>
-						<button id="ROTATE_btn" style={{width:"120px"}}>ROTATE</button>
-					</div>
-					<br/>
-					<div>
-						Show Room Size
-						<table>
-							<tbody>
-								<tr>
-									<td>width: </td>
-									<td><input id="resize_width" style={{width:"100px"}} type="range" step="0.1" min="3" max="20" defaultValue="11"/></td>
-								</tr>
-								<tr>
-									<td>height: </td>
-									<td><input id="resize_height" style={{width:"100px"}} type="range" step="0.1" min="3" max="20" defaultValue="7"/></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+				<Detailer />
 			</div>
 		)
 	}

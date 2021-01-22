@@ -38,8 +38,8 @@ const setWallDim = (wall, dim) => {
             wall.position.setY(0);
             break;
         case 3:
-            wall.scale.setY(1);
-            wall.position.setY(wall.geometry.parameters.height/2);
+            wall.scale.setY(wall.wall_size.y);
+            wall.position.setY(wall.scale.y/2);
             break;
         default:
             break;
@@ -53,8 +53,8 @@ const setDoorDim = (door, dim) => {
             door.position.setY(0.001);
             break;
         case 3:
-            door.scale.setY(1);
-            door.position.setY(door.geometry.parameters.height/2);
+            door.scale.setY(door.door_size.y);
+            door.position.setY(door.scale.y/2);
             break;
         default:
             break;
@@ -68,8 +68,8 @@ const setWindowDim = (window, dim) => {
             window.position.setY(0.001);
             break;
         case 3:
-            window.scale.setY(1);
-            window.position.setY(parseFloat(window.name.split("_")[2]));
+            window.scale.setY(window.window_size.y);
+            window.position.setY(window.window_position.y);
             break;
         default:
             break;
@@ -80,9 +80,11 @@ const setItemGroupDim = (item, dim) => {
     switch (dim) {
         case 2:
             item.scale.setY(0.0001);
+            item.position.setY(0.001);
             break;
         case 3:
-            item.scale.setY(0.01);
+            item.scale.setY(item.obj_size.y);
+            item.position.setY(item.obj_position.y);
             break;
         default:
             break;

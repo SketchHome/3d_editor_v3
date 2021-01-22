@@ -1,24 +1,18 @@
 {
     "room": {
         "type": "square",
-        "size": {"x": 11, "y": 2, "z": 7},
+        "size": {"x": 11, "y": 3, "z": 7},
         "wall": [
             {
                 "id": "wall_0",
                 "type": "horizon",
                 "direction": "top",
-                "door": [
-                    {
-                        "id": "door_0",
-                        "size": {"x": 1, "y": 1.5, "z": 0.3},
-                        "position": {"x": 1}
-                    }
-                ],
+                "door": [],
                 "window": [
                     {
                         "id": "window_0",
-                        "size": {"x": 1, "y": 1, "z": 0.3},
-                        "position": {"x": -1, "y": 1}
+                        "size": {"x": 3, "y": 2, "z": 0.3},
+                        "position": {"x": 0, "y": 1.7}
                     }
                 ]
             },
@@ -33,30 +27,29 @@
                 "id": "wall_2",
                 "type": "vertical",
                 "direction": "right",
-                "door": [
-                    {
-                        "id": "door_0",
-                        "size": {"x": 1, "y": 1.5, "z": 0.3},
-                        "position": {"x": 1}
-                    }
-                ],
+                "door": [],
                 "window": []
             },
             {
                 "id": "wall_3",
                 "type": "vertical",
                 "direction": "left",
-                "door": [],
+                "door": [
+                    {
+                        "id": "door_0",
+                        "size": {"x": 1.5, "y": 2, "z": 0.3},
+                        "position": {"x": -1}
+                    }
+                ],
                 "window": []
             }
         ],
-        
         "item": [
             {
-                "type": "big",
-                "size": {"x": 4, "y": 2, "z": 1},
-                "position": {"x": 0, "y": 0, "z": 0},
-                "id": "item_0"
+                "name": "indoor_plant_02",
+                "id": "item_1",
+                "size": {"x": 0.2, "y": 0.2, "z": 0.2},
+                "position": {"x": 0, "y": 0, "z": 1}
             }
         ]
     }

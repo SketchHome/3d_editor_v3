@@ -12,15 +12,15 @@ export const removeDragTarget = (target) => {
 
 const addDragTarget = (drag_target, object) => {
     switch (object.name.split("_")[0]) {
-        case 'window':
+        case "window":
             drag_target.push(object);
-            object.material.color.set('blue');
+            object.material.color.set("blue");
             break;
-        case 'door':
+        case "door":
             drag_target.push(object);
-            object.material.color.set('blue');
+            object.material.color.set("blue");
             break;
-        case 'load':
+        case "load":
             drag_target.push(object.parent);
             break;
         default:
