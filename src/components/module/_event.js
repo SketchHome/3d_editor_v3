@@ -79,7 +79,7 @@ export const setButtonEvent = (view_mode, camera, controls, scene, target, drag_
         const wall = target[0].object;
         const door_id = "door_3021";
         const door_size = { "x": 1.5, "y": 2, "z": 0.3 };
-        const door_position = { "x": -1 };
+        const door_position = { "x": 0 };
         addDoor(wall.parent, door_id, door_size, door_position, wall.wall_type, wall.position, view_mode);
     });
 
