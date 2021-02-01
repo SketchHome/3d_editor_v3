@@ -1,12 +1,12 @@
 import { setMouse, setTarget } from "./_target"
-import { setDragTarget } from "./_drag";
+import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb } from "./_common";
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem } from "./_common";
 import { addDoor, addLoadObj, addWindow } from "./_addObject"
 
 export const setMouseEvent = (width, height,
     mouse, camera, scene, raycaster,
-    target, drag_target) => {
+    target, drag_target, dragControls, room) => {
 
     // normal click event - set target 		
     window.addEventListener("mousedown", (event) => {
@@ -28,18 +28,40 @@ export const setMouseEvent = (width, height,
         const intersects = raycaster.intersectObjects(scene.children, true);
         setDragTarget(intersects, target, drag_target);
     }, false);
+
+    // let current_postion;
+    dragControls.addEventListener("dragstart", (event) => {
+        console.log("drag start");
+        dragControls.enabled = true;
+        // current_postion = event.object.position;
+    });
+
+    dragControls.addEventListener("drag", (event) => {
+        if (drag_target.length === 0) {
+            dragControls.enabled = false;
+            return;
+        }
+
+        relocateDragTarget(event.object, room.view_mode);
+    });
+
+    dragControls.addEventListener("dragend", (event) => {
+        console.log("drag end");
+        dragControls.enabled = false;
+    });
+
 };
 
-export const setButtonEvent = (view_mode, camera, controls, scene, target, drag_target, room) => {
+export const setButtonEvent = (camera, controls, scene, target, drag_target, room) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         set2DMODE(camera, controls, room);
-        view_mode = 2;
+        room.view_mode = 2;
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
         set3DMODE(camera, controls, room);
-        view_mode = 3;
+        room.view_mode = 3;
         document.getElementById("mode_name").innerHTML = "view";
     });
 
@@ -49,7 +71,7 @@ export const setButtonEvent = (view_mode, camera, controls, scene, target, drag_
     });
 
     document.getElementById("ZOOM_MODE_btn").addEventListener("click", () => {
-        setZoomMode(controls, view_mode);
+        setZoomMode(controls, room.view_mode);
         document.getElementById("mode_name").innerHTML = "view";
     });
 
@@ -80,7 +102,7 @@ export const setButtonEvent = (view_mode, camera, controls, scene, target, drag_
         const door_id = "door_3021";
         const door_size = { "x": 1.5, "y": 2, "z": 0.3 };
         const door_position = { "x": 0 };
-        addDoor(wall.parent, door_id, door_size, door_position, wall.wall_type, wall.position, view_mode);
+        addDoor(wall.parent, door_id, door_size, door_position, wall.wall_type, wall.position, room.view_mode);
     });
 
     document.getElementById("Add_window_btn").addEventListener("click", () => {
@@ -91,24 +113,23 @@ export const setButtonEvent = (view_mode, camera, controls, scene, target, drag_
         const window_id = "window_3021";
         const window_size = { "x": 2, "y": 2, "z": 0.3 };
         const window_position = { "x": 0, "y": 1.7 };
-        addWindow(wall.parent, window_id, window_size, window_position, wall.wall_type, wall.position, view_mode);
+        addWindow(wall.parent, window_id, window_size, window_position, wall.wall_type, wall.position, room.view_mode);
     });
 
     // 나중에 분리 필요
     const item_size_info = {
-        "Zuccarello": { "x": 0.01, "y": 0.01, "z": 0.01 },
-        "indoor_plant_02": { "x": 0.2, "y": 0.2, "z": 0.2 },
-        "cat": { "x": 0.01, "y": 0.01, "z": 0.01 }
+        "sofa": { "x": 0.001, "y": 0.001, "z": 0.001 },
     };
     const elements = document.getElementsByClassName("Add_item_btn");
     for (var i = 0; i < elements.length; i++) {
-        elements[i].addEventListener('click', (e) => {
+        elements[i].addEventListener("click", (e) => {
             const item_name = e.target.getAttribute("item_name");
-            const item_size = item_size_info[item_name];
+            const item_path = e.target.getAttribute("item_path") + "/";
+            const item_size = item_size_info["sofa"];
             const item_position = { "x": 0, "y": 0, "z": 0 };
             const item_id = "item";
 
-            addLoadObj(room, item_name, item_size, item_position, item_id, view_mode);
+            addLoadObj(room, item_name, item_path, item_size, item_position, item_id, room.view_mode);
         }, false);
     }
 
@@ -142,7 +163,7 @@ export const setButtonEvent = (view_mode, camera, controls, scene, target, drag_
     }
 }
 
-export const setInputEvent = (room) => {
+export const setInputEvent = (room, target) => {
     document.getElementById("resize_width").addEventListener("input", () => {
         const width = parseFloat(document.getElementById("resize_width").value);
         const height = parseFloat(document.getElementById("resize_height").value);
@@ -157,5 +178,12 @@ export const setInputEvent = (room) => {
 
         if (isNaN(width) || isNaN(height)) return;
         resizeRoom(room, width, height);
+    });
+
+    document.getElementById("resize_item").addEventListener("input", () => {
+        const size = parseFloat(document.getElementById("resize_item").value);
+
+        if (isNaN(size) || target.length === 0) return;
+        resizeItem(target[0].object, size);
     });
 }

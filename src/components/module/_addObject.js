@@ -1,5 +1,6 @@
 import * as THREE from "three"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh } from "./_createMesh"
 
 export const addSquare = (scene) => {
@@ -20,34 +21,53 @@ export const addSquare = (scene) => {
     scene.add(cube);
 };
 
-export const addLoadObj = (room, obj_name, size, position, id, dim) => {
-    const loader = new OBJLoader();
-    const path = "./3d_data";
-    loader.load(
-        `${path}/${obj_name}.obj`,
-        (object) => {
-            if (dim === 3) {
-                object.scale.set(size.x, size.y, size.z);
-                object.position.set(position.x, position.y, position.z);
+export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) => {
+    const mtl_loader = new MTLLoader();
+    const obj_loader = new OBJLoader();
+
+    mtl_loader.setPath(obj_path);
+    obj_loader.setPath(obj_path);
+
+    mtl_loader.load(
+        `${obj_name.split("-")[0]}.mtl`,
+        (materials) => {
+        materials.preload();
+        mtl_loader.setMaterialOptions( { invertTrProperty: true } )
+        obj_loader.setMaterials(materials);
+        obj_loader.load(
+            `${obj_name.split("-")[0]}.obj`,
+            (object) => {
+                if (dim === 3) {
+                    object.scale.set(size.x, size.y, size.z);
+                    object.position.set(position.x, position.y, position.z);
+                }
+                else if (dim === 2) {
+                    object.scale.set(size.x, 0.0001, size.z);
+                    object.position.set(position.x, 0.001, position.z);
+                }
+                object.name = `group_${id}`;
+                object.obj_size = { "x": size.x, "y": size.y, "z": size.z };
+                object.obj_position = { "x": position.x, "y": position.y, "z": position.z };
+                object.children.forEach(child => { child.name = "load_object_part"; });
+                room.add(object);
+            },
+            (xhr) => {
+                console.log("OBJLoader: " + (xhr.loaded / xhr.total * 100) + "% loaded");
+            },
+            (error) => {
+                console.log("An error happened (OBJLoader)");
+                console.log(error);
             }
-            else if (dim === 2) {
-                object.scale.set(size.x, 0.0001, size.z);
-                object.position.set(position.x, 0.001, position.z);
-            }
-            object.name = `group_${id}`;
-            object.obj_size = { "x": size.x, "y": size.y, "z": size.z };
-            object.obj_position = { "x": position.x, "y": position.y, "z": position.z };
-            object.children.forEach(child => { child.name = "load_object_part"; });
-            room.add(object);
-        },
-        (xhr) => {
-            console.log((xhr.loaded / xhr.total * 100) + "% loaded");
-        },
-        (error) => {
-            console.log("An error happened");
-            console.log(error);
-        }
-    );
+        );
+    }, (xhr) => {
+            console.log("MTLLoader: " + (xhr.loaded / xhr.total * 100) + "% loaded");
+    }, (error) => {
+        console.log("An error happened (MTLLoader)");
+        console.log(error);
+    });
+
+
+    
 };
 
 export const addRoom = (room_group, room, dim) => {

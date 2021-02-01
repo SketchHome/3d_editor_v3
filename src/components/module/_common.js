@@ -75,6 +75,20 @@ export const resizeRoom = (room, width, height) => {
     });
 }
 
+export const resizeItem = (item, size) => {
+    if (item.name !== "load_object_part") return;
+    const real_size = size / 10000;
+    item.parent.scale.setX(real_size);
+    item.parent.scale.setZ(real_size);
+    item.parent.obj_size = {
+        x: real_size,
+        y: real_size,
+        z: real_size
+    }
+
+    if (item.parent.scale.y !== 0.0001) item.parent.scale.setY(real_size);
+}
+
 const resizeWall = (wall, width, height) => {
     switch (wall.wall_type) {
         case "horizon":

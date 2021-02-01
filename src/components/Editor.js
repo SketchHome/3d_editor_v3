@@ -7,7 +7,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { setMouseEvent, setButtonEvent, setInputEvent } from "./module/_event";
 import { addLoadObj, addRoom } from "./module/_addObject";
 
-import Detailer from "./Detailer"
+import Detailer from "./Detailer/Detailer"
 
 import room_data from "../data/room_1_data.json";
 
@@ -27,10 +27,10 @@ class Editor extends Component {
 		camera.position.y = 10;
 		this.mount.appendChild(renderer.domElement);
 
-
+		var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
+		scene.add( ambientLight );
 		let target = [];
 		let drag_target = [];
-		let view_mode = 2;
 		const controls = new OrbitControls(camera, renderer.domElement);
 		const dragControls = new DragControls(drag_target, camera, renderer.domElement);
 		const mouse = new THREE.Vector2();
@@ -38,9 +38,11 @@ class Editor extends Component {
 
 		controls.enabled = false;
 		dragControls.transformGroup = true;
+		dragControls.enabled = false;
 
 		// add something
 		const room = new THREE.Group();
+		room.view_mode = 2;
 		room.name = "room";
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
@@ -49,9 +51,9 @@ class Editor extends Component {
 		scene.add(room);
 
 		// set event
-		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target);
-		setButtonEvent(view_mode, camera, controls, scene, target, drag_target, room);
-		setInputEvent(room);
+		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);
+		setButtonEvent(camera, controls, scene, target, drag_target, room);
+		setInputEvent(room, target);
 
 		const animate = function () {
 			requestAnimationFrame(animate);
