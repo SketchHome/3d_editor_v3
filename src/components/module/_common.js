@@ -1,3 +1,7 @@
+import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
+import "fs"
+
+
 export const removeObject = (scene, target, drag_target) => {
     let temp = target.pop().object;
 
@@ -121,6 +125,7 @@ const relocateWall = (wall, width, height) => {
     }
 }
 
+
 const relocateObject = (object) => {
     object.parent.children.forEach(child => {
         if (child.name.split("_")[0] === "wall") {
@@ -155,14 +160,39 @@ export const changeWallColor = (wall, color) => {
 
 export const hexToRgb = (hex) => {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-      return r + r + g + g + b + b;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+        return r + r + g + g + b + b;
     });
-  
+
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
-      r: parseInt(result[1], 16)/255,
-      g: parseInt(result[2], 16)/255,
-      b: parseInt(result[3], 16)/255
+        r: parseInt(result[1], 16) / 255,
+        g: parseInt(result[2], 16) / 255,
+        b: parseInt(result[3], 16) / 255
     } : null;
+}
+
+export const exportRoom = (room) => {
+    const exporter = new OBJExporter();
+
+    const objects = findAllObject(room);
+
+    for (const obj of objects) {
+        console.log(obj);
+        console.log(exporter.parse(obj));
+    }
+    
+}
+
+const findAllObject = (obj) => {
+    if (obj.name === 'group_item') return obj;
+    else if (obj.children.length === 0 && obj.type === 'Mesh') return obj;
+    else {
+        let temp = [];
+        for (const child of obj.children) {
+            temp = temp.concat(findAllObject(child));
+        }
+
+        return temp;
+    }
 }

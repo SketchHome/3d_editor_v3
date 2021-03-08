@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import { setMouseEvent, setButtonEvent, setInputEvent } from "./module/_event";
+import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
 import { addLoadObj, addRoom } from "./module/_addObject";
 
 import Detailer from "./Detailer/Detailer"
@@ -43,6 +43,7 @@ class Editor extends Component {
 		// add something
 		const room = new THREE.Group();
 		room.view_mode = 2;
+		room.is_person_view_mode = false;
 		room.name = "room";
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
@@ -51,6 +52,7 @@ class Editor extends Component {
 		scene.add(room);
 
 		// set event
+		setKeyboardEvent(controls, camera, room);
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);
 		setButtonEvent(camera, controls, scene, target, drag_target, room);
 		setInputEvent(room, target);

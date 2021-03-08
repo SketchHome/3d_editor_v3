@@ -1,8 +1,62 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
-import { set2DMODE, set3DMODE, setZoomMode, setDragMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem } from "./_common";
+import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom } from "./_common";
 import { addDoor, addLoadObj, addWindow } from "./_addObject"
+
+// import * as THREE from "three";
+
+export const setKeyboardEvent = (controls, camera, room) => {
+
+    window.addEventListener("keydown", (event) => {
+        var keycode = event.keyCode;
+
+        if (keycode === 87) {
+            const distance = 0.5;
+            camera.translateZ(-distance);
+            camera.position.setY(1.3);
+        }
+    });
+    // const moveCamera = async (distance) => {
+    //     for (let i = 0; i < 7; i++) {
+    //         camera.translateX(distance);
+    //         // camera.translateY(distance);
+    //         await sleep(70);
+    //     }
+    // }
+
+    // const sleep = (ms) => {
+    //     return new Promise((resolve) => {
+    //         setTimeout(resolve, ms);
+    //     });
+    // }   
+    // function onDocumentKeyDown(event) {
+    //     var delta = 0.2;
+    //     event = event || window.event;
+    //     var keycode = event.keyCode;
+    //     switch (keycode) {
+    //         case 87:
+    //             console.log(camera.position)
+    //             // camera.position.x = camera.position.x - delta;
+    //             break;
+    //         case 65:
+    //             camera.position.z = camera.position.z - delta;
+    //             break;
+    //         case 83: 
+    //             camera.position.x = camera.position.x + delta;
+    //             break;
+    //         case 68:
+    //             camera.position.z = camera.position.z + delta;
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    //     document.addEventListener('keyup', onDocumentKeyUp, false);
+    // }
+    // function onDocumentKeyUp(event) {
+    //     document.removeEventListener('keydown', onDocumentKeyDown, false);
+    // }
+}
 
 export const setMouseEvent = (width, height,
     mouse, camera, scene, raycaster,
@@ -54,16 +108,25 @@ export const setMouseEvent = (width, height,
 
 export const setButtonEvent = (camera, controls, scene, target, drag_target, room) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
-        set2DMODE(camera, controls, room);
         room.view_mode = 2;
+        room.is_person_view_mode = false;
+        set2DMODE(camera, controls, room);
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
-        set3DMODE(camera, controls, room);
         room.view_mode = 3;
+        room.is_person_view_mode = false;
+        set3DMODE(camera, controls, room);
         document.getElementById("mode_name").innerHTML = "view";
     });
+
+    document.getElementById("PersonView_btn").addEventListener("click", () => {
+        room.view_mode = 3;
+        room.is_person_view_mode = true;
+        setPersonViewMode(camera, controls, room);
+        document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
+    })
 
     document.getElementById("EDIT_MODE_btn").addEventListener("click", () => {
         setDragMode(controls);
@@ -161,6 +224,18 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
             }
         }
     }
+
+    // get camera info
+    document.getElementById("Camera_Info_btn").addEventListener("click", () => {
+        console.log('position:', camera.position.x, camera.position.y, camera.position.z);
+        console.log('rotation:', camera.rotation.x, camera.rotation.y, camera.rotation.z);
+    });
+
+    // get file
+    document.getElementById("Export_btn").addEventListener("click", () => {
+        console.log("export")
+        exportRoom(room)
+    });
 }
 
 export const setInputEvent = (room, target) => {
