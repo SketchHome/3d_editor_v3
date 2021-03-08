@@ -1,5 +1,4 @@
 import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
-import "fs"
 
 
 export const removeObject = (scene, target, drag_target) => {
@@ -176,7 +175,7 @@ export const exportRoom = (room) => {
     const exporter = new OBJExporter();
 
     const objects = findAllObject(room);
-
+    
     for (const obj of objects) {
         console.log(obj);
         console.log(exporter.parse(obj));
