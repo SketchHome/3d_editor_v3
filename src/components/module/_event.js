@@ -227,8 +227,32 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
 
     // get camera info
     document.getElementById("Camera_Info_btn").addEventListener("click", () => {
-        console.log('position:', camera.position.x, camera.position.y, camera.position.z);
-        console.log('rotation:', camera.rotation.x, camera.rotation.y, camera.rotation.z);
+        const data = {
+            'camera_position': {
+                'x': camera.position.x,
+                'y': camera.position.y,
+                'z': camera.position.z,
+            },
+            'camera_rotation': {
+                'x': camera.rotation.x,
+                'y': camera.rotation.y,
+                'z': camera.rotation.z,
+            },
+            'camera': camera
+        }
+
+        fetch('http://localhost:4000/get_camera_info', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 'data': data })
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log(json)
+            })
     });
 
     // get file
