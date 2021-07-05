@@ -49,34 +49,18 @@ export const rotateObjectVertical = (target) => {
     temp.rotation.set(r_value, 0, 0);
 }
 
-const dev_limitWallSize = (mesh) => {
-    //console.log(mesh);
-    const doorPosition = mesh.position.z;
-
-    if (doorPosition <= 0) {
-        const minValue = doorPosition - (mesh.door_size.x / 2);
-        document.getElementById('resize_height').setAttribute('min', -2 * minValue);
-    }
-    else {
-        const minValue = doorPosition + (mesh.door_size.x / 2);
-        document.getElementById('resize_height').setAttribute('min', 2 * minValue);
-    }
-}
-
 const limitWallSize = (group) => { // wall타입의 group 한개만 받음
     // wall만 있을 때
     if(group.children.length === 1) return;
 
     let minValue = [];
     let direction;
-    let wallMesh;
 
     group.children.forEach((mesh) => {
         console.log(mesh);
         switch (mesh.name.split("_")[0]) {
             case 'wall':
                 direction = mesh.wall_type;
-                wallMesh = mesh;
                 console.log(direction);
                 break;
             case 'door':
@@ -92,13 +76,12 @@ const limitWallSize = (group) => { // wall타입의 group 한개만 받음
     )
 
     if (minValue.length === 0) return;
-    console.log(minValue);
     let max = 0;
 
     minValue.forEach((value) => {
         max = (value > max) ? value : max;
     })
-    console.log(max);
+
     switch (direction) {
         case 'vertical' :
             document.getElementById('resize_height').setAttribute('min', max);
