@@ -1,8 +1,9 @@
 import { removeDragTarget } from "./_drag"
 
 export const setMouse = (event, width, height, mouse) => {
-    mouse.x = (event.clientX / width) * 2 - 1;
-    mouse.y = - (event.clientY / height) * 2 + 1;
+    const canvas_position = event.target.getBoundingClientRect()
+    mouse.x = ((event.clientX - canvas_position.left)/ width) * 2 - 1;
+    mouse.y = - ((event.clientY - canvas_position.top) / height) * 2 + 1;
 };
 
 export const setTarget = (intersects, target, drag_target) => {
