@@ -49,10 +49,102 @@ export const rotateObjectVertical = (target) => {
     temp.rotation.set(r_value, 0, 0);
 }
 
+const dev_limitWallSize = (mesh) => {
+    //console.log(mesh);
+    const doorPosition = mesh.position.z;
+
+    if (doorPosition <= 0) {
+        const minValue = doorPosition - (mesh.door_size.x / 2);
+        document.getElementById('resize_height').setAttribute('min', -2 * minValue);
+    }
+    else {
+        const minValue = doorPosition + (mesh.door_size.x / 2);
+        document.getElementById('resize_height').setAttribute('min', 2 * minValue);
+    }
+}
+
+const limitWallSize = (group) => { // wall타입의 group 한개만 받음
+    // wall만 있을 때
+    if(group.children.length === 1) return;
+
+    let minValue = [];
+    let direction;
+    let wallMesh;
+
+    group.children.forEach((mesh) => {
+        console.log(mesh);
+        switch (mesh.name.split("_")[0]) {
+            case 'wall':
+                direction = mesh.wall_type;
+                wallMesh = mesh;
+                console.log(direction);
+                break;
+            case 'door':
+                let minDoor = getItemPosition(mesh, direction);
+                minValue.push(minDoor)
+                break;
+            case 'window':
+                let minWindow = getItemPosition(mesh, direction);
+                minValue.push(minWindow)
+
+        }   
+        }
+    )
+
+    if (minValue.length === 0) return;
+    console.log(minValue);
+    let max = 0;
+
+    minValue.forEach((value) => {
+        max = (value > max) ? value : max;
+    })
+    console.log(max);
+    switch (direction) {
+        case 'vertical' :
+            document.getElementById('resize_height').setAttribute('min', max);
+            //wallMesh.scale.setZ(max);
+            break;
+        case 'horizon' :
+            document.getElementById('resize_width').setAttribute('min', max);
+            //wallMesh.scale.setX(max);
+            break;
+    }
+}
+
+const getItemPosition = (mesh, direction) => {
+    let min = 0;
+    switch (direction) {
+        case 'vertical' :
+            if (mesh.position.z <= 0) {
+                min = mesh.position.z - (mesh.scale.x / 2);
+                min *= (-2);
+            }
+            else {
+                min = mesh.position.z + (mesh.scale.x / 2);
+                min *= 2;
+            }
+            break;
+        case 'horizon' :
+            if (mesh.position.x <= 0) {
+                min = mesh.position.x - (mesh.scale.x / 2);
+                min *= (-2);
+            }
+            else {
+                min = mesh.position.x + (mesh.scale.x / 2);
+                min *= 2;
+            }
+            break;
+        default :
+            break;
+    }
+    return min;
+}
+
 export const resizeRoom = (room, width, height) => {
     room.children.forEach(group => {
         switch (group.name.split("_")[1]) {
             case "wall":
+                limitWallSize(group);
                 group.children.forEach(mesh => {
                     switch (mesh.name.split("_")[0]) {
                         case "wall":
@@ -60,7 +152,10 @@ export const resizeRoom = (room, width, height) => {
                             relocateWall(mesh, width, height);
                             break;
                         case "window":
+                            relocateObject(mesh);
+                            break;
                         case "door":
+                            //dev_limitWallSize(mesh);
                             relocateObject(mesh);
                             break;
                         default:
