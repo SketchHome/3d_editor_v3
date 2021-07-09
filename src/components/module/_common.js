@@ -57,19 +57,20 @@ const limitWallSize = (group) => { // wall타입의 group 한개만 받음
     let direction;
 
     group.children.forEach((mesh) => {
-        console.log(mesh);
         switch (mesh.name.split("_")[0]) {
             case 'wall':
                 direction = mesh.wall_type;
-                console.log(direction);
                 break;
             case 'door':
                 let minDoor = getItemPosition(mesh, direction);
-                minValue.push(minDoor)
+                minValue.push(minDoor);
                 break;
             case 'window':
                 let minWindow = getItemPosition(mesh, direction);
-                minValue.push(minWindow)
+                minValue.push(minWindow);
+                break;
+            default :
+                break;
 
         }   
         }
@@ -90,6 +91,8 @@ const limitWallSize = (group) => { // wall타입의 group 한개만 받음
         case 'horizon' :
             document.getElementById('resize_width').setAttribute('min', max);
             //wallMesh.scale.setX(max);
+            break;
+        default :
             break;
     }
 }
@@ -135,10 +138,7 @@ export const resizeRoom = (room, width, height) => {
                             relocateWall(mesh, width, height);
                             break;
                         case "window":
-                            relocateObject(mesh);
-                            break;
                         case "door":
-                            //dev_limitWallSize(mesh);
                             relocateObject(mesh);
                             break;
                         default:
