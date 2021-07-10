@@ -49,54 +49,6 @@ export const rotateObjectVertical = (target) => {
     temp.rotation.set(r_value, 0, 0);
 }
 
-const limitWallSize = (group) => { // wall타입의 group 한개만 받음
-    // wall만 있을 때
-    if(group.children.length === 1) return;
-
-    let minValue = [];
-    let direction;
-
-    group.children.forEach((mesh) => {
-        switch (mesh.name.split("_")[0]) {
-            case 'wall':
-                direction = mesh.wall_type;
-                break;
-            case 'door':
-                let minDoor = getItemPosition(mesh, direction);
-                minValue.push(minDoor);
-                break;
-            case 'window':
-                let minWindow = getItemPosition(mesh, direction);
-                minValue.push(minWindow);
-                break;
-            default :
-                break;
-
-        }   
-        }
-    )
-
-    if (minValue.length === 0) return;
-    let max = 0;
-
-    minValue.forEach((value) => {
-        max = (value > max) ? value : max;
-    })
-
-    switch (direction) {
-        case 'vertical' :
-            document.getElementById('resize_height').setAttribute('min', max);
-            //wallMesh.scale.setZ(max);
-            break;
-        case 'horizon' :
-            document.getElementById('resize_width').setAttribute('min', max);
-            //wallMesh.scale.setX(max);
-            break;
-        default :
-            break;
-    }
-}
-
 const getItemPosition = (mesh, direction) => {
     let min = 0;
     switch (direction) {
@@ -130,7 +82,6 @@ export const resizeRoom = (room, width, height) => {
     room.children.forEach(group => {
         switch (group.name.split("_")[1]) {
             case "wall":
-                limitWallSize(group);
                 group.children.forEach(mesh => {
                     switch (mesh.name.split("_")[0]) {
                         case "wall":
@@ -171,6 +122,38 @@ export const resizeItem = (item, size) => {
 }
 
 const resizeWall = (wall, width, height) => {
+    let minValue = [];
+    if (wall.parent.children.length > 1) {
+        wall.parent.children.forEach((mesh) => {
+            switch (mesh.name.split("_")[0]) {
+                case "door":
+                    let minDoor = getItemPosition(mesh, wall.wall_type);
+                    minValue.push(minDoor);
+                    break;
+                case "window":
+                    let minWindow = getItemPosition(mesh, wall.wall_type);
+                    minValue.push(minWindow);
+                    break;
+                default:
+                    break;
+            }
+        });
+        
+        minValue.sort().reverse();
+
+        switch (wall.wall_type) {
+            case "horizon":
+                document.getElementById('resize_width').setAttribute('min', minValue[0]);
+                break;
+            case "vertical":
+                document.getElementById('resize_height').setAttribute('min', minValue[0]);
+                break;
+            default :
+                break;
+        }
+        console.log(minValue);
+    }
+
     switch (wall.wall_type) {
         case "horizon":
             wall.scale.setX(width);
