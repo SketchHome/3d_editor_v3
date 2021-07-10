@@ -121,38 +121,43 @@ export const resizeItem = (item, size) => {
     if (item.parent.scale.y !== 0.0001) item.parent.scale.setY(real_size);
 }
 
-const resizeWall = (wall, width, height) => {
+const limitWallSize = (wall) => {
     let minValue = [];
-    if (wall.parent.children.length > 1) {
-        wall.parent.children.forEach((mesh) => {
-            switch (mesh.name.split("_")[0]) {
-                case "door":
-                    let minDoor = getItemPosition(mesh, wall.wall_type);
-                    minValue.push(minDoor);
-                    break;
-                case "window":
-                    let minWindow = getItemPosition(mesh, wall.wall_type);
-                    minValue.push(minWindow);
-                    break;
-                default:
-                    break;
-            }
-        });
-        
-        minValue.sort().reverse();
+    if(wall.parent.children.length < 2) return;
 
-        switch (wall.wall_type) {
-            case "horizon":
-                document.getElementById('resize_width').setAttribute('min', minValue[0]);
+    wall.parent.children.forEach((mesh) => {
+        switch (mesh.name.split("_")[0]) {
+            case "door":
+                let minDoor = getItemPosition(mesh, wall.wall_type);
+                minValue.push(minDoor);
                 break;
-            case "vertical":
-                document.getElementById('resize_height').setAttribute('min', minValue[0]);
+            case "window":
+                let minWindow = getItemPosition(mesh, wall.wall_type);
+                minValue.push(minWindow);
                 break;
-            default :
+            default:
                 break;
         }
-        console.log(minValue);
+    });
+
+    minValue.sort().reverse();
+
+    switch (wall.wall_type) {
+        case "horizon":
+            document.getElementById('resize_width').setAttribute('min', minValue[0]);
+            break;
+        case "vertical":
+            document.getElementById('resize_height').setAttribute('min', minValue[0]);
+            break;
+        default :
+            break;
     }
+    console.log(minValue);
+
+}
+
+const resizeWall = (wall, width, height) => {
+    limitWallSize(wall);
 
     switch (wall.wall_type) {
         case "horizon":
