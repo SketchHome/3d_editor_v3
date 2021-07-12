@@ -152,11 +152,10 @@ const limitWallSize = (wall) => {
         default :
             break;
     }
-    console.log(minValue);
-
 }
 
 const resizeWall = (wall, width, height) => {
+    
     limitWallSize(wall);
 
     switch (wall.wall_type) {
