@@ -48,7 +48,11 @@ export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) =>
                 object.name = `group_${id}`;
                 object.obj_size = { "x": size.x, "y": size.y, "z": size.z };
                 object.obj_position = { "x": position.x, "y": position.y, "z": position.z };
-                object.children.forEach(child => { child.name = "load_object_part"; });
+                object.children.forEach(child => { 
+                    child.name = "load_object_part";
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                 });
                 room.add(object);
             },
             (xhr) => {

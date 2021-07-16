@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export const createWallMesh = (id, type, direction, room_size, dim) => {
     // set size
-    const material = new THREE.MeshBasicMaterial({ color: "#c5a880" });
+    const material = new THREE.MeshLambertMaterial({ color: "#c5a880" });
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const wall_mesh = new THREE.Mesh(geometry, material);
 
@@ -21,6 +21,10 @@ export const createWallMesh = (id, type, direction, room_size, dim) => {
     wall_mesh.scale.set(size.x, size.y, size.z);
     wall_mesh.wall_type = type;
     wall_mesh.wall_size = { "y": size.y };
+
+    // shadow
+    wall_mesh.castShadow = true;
+    wall_mesh.receiveShadow = false;
 
     // set position
     const position = new THREE.Vector3();
@@ -69,6 +73,7 @@ export const createWindowMesh = (id, size, position, type, wall_position, dim) =
     window_mesh.scale.set(size.x, size.y, size.z);
     window_mesh.window_size = { "x": size.x, "y": size.y, "z": size.z };
     window_mesh.window_position = { "x": position.x, "y": position.y };
+    //window_mesh.castShadow = true
     switch (type) {
         case "horizon":
             window_mesh.position.setX(position.x);
@@ -109,6 +114,7 @@ export const createDoorMesh = (id, size, position, type, wall_position, dim) => 
     door_mesh.scale.set(size.x, size.y, size.z);
     door_mesh.door_size = { "x": size.x, "y": size.y, "z": size.z };
     door_mesh.door_position = { "x": position.x };
+    door_mesh.castShadow = true;
     switch (type) {
         case "horizon":
             door_mesh.position.setX(position.x);
@@ -142,13 +148,15 @@ export const createDoorMesh = (id, size, position, type, wall_position, dim) => 
 }
 
 export const createFloorMesh = (size) => {
-    const material = new THREE.MeshBasicMaterial({ color: "#e6e6e6" });
+    const material = new THREE.MeshLambertMaterial({ color: "#e6e6e6" });
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const floor_mesh = new THREE.Mesh(geometry, material);
     
     floor_mesh.scale.set(size.x, 0.1, size.z);
     floor_mesh.position.setY(-0.05);
     floor_mesh.name = "floor";
+
+    floor_mesh.receiveShadow = true;
     
     return floor_mesh;
 }

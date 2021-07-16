@@ -24,11 +24,21 @@ class Editor extends Component {
 
 		renderer.setClearColor("#ffffff")
 		renderer.setSize(width, height);
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		camera.position.y = 10;
 		this.mount.appendChild(renderer.domElement);
 
-		var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
-		scene.add( ambientLight );
+		//var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
+		//scene.add( ambientLight );
+
+		// add shadow
+		var pointLight = new THREE.PointLight(0xffffff, 1.5);
+		pointLight.castShadow = true;
+		pointLight.position.set(0, 3, 0);
+		scene.add(pointLight);
+		//
+
 		let target = [];
 		let drag_target = [];
 		const controls = new OrbitControls(camera, renderer.domElement);
@@ -50,6 +60,8 @@ class Editor extends Component {
 			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
 		});
 		scene.add(room);
+
+		console.log(scene);
 
 		// set event
 		setKeyboardEvent(controls, camera, room);
