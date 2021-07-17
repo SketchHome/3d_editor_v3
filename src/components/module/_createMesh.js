@@ -5,7 +5,6 @@ export const createWallMesh = (id, type, direction, room_size, dim) => {
     const material = new THREE.MeshLambertMaterial({ color: "#c5a880" });
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const wall_mesh = new THREE.Mesh(geometry, material);
-
     const size = new THREE.Vector3();
     const thick = 0.1;
     switch (type) {
@@ -24,7 +23,7 @@ export const createWallMesh = (id, type, direction, room_size, dim) => {
 
     // shadow
     wall_mesh.castShadow = true;
-    wall_mesh.receiveShadow = false;
+    wall_mesh.receiveShadow = true;
 
     // set position
     const position = new THREE.Vector3();
@@ -114,7 +113,7 @@ export const createDoorMesh = (id, size, position, type, wall_position, dim) => 
     door_mesh.scale.set(size.x, size.y, size.z);
     door_mesh.door_size = { "x": size.x, "y": size.y, "z": size.z };
     door_mesh.door_position = { "x": position.x };
-    door_mesh.castShadow = true;
+    door_mesh.castShadow = false;
     switch (type) {
         case "horizon":
             door_mesh.position.setX(position.x);

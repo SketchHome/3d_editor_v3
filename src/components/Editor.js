@@ -5,7 +5,7 @@ import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
-import { addLoadObj, addRoom } from "./module/_addObject";
+import { addLight, addLoadObj, addRoom } from "./module/_addObject";
 
 import Detailer from "./Detailer/Detailer"
 
@@ -26,18 +26,12 @@ class Editor extends Component {
 		renderer.setSize(width, height);
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		renderer.shadowMap.renderReverseSided = false;
 		camera.position.y = 10;
 		this.mount.appendChild(renderer.domElement);
 
 		//var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
 		//scene.add( ambientLight );
-
-		// add shadow
-		var pointLight = new THREE.PointLight(0xffffff, 1.5);
-		pointLight.castShadow = true;
-		pointLight.position.set(0, 3, 0);
-		scene.add(pointLight);
-		//
 
 		let target = [];
 		let drag_target = [];
@@ -50,11 +44,25 @@ class Editor extends Component {
 		dragControls.transformGroup = true;
 		dragControls.enabled = false;
 
+		// add shadow
+		/*var pointLight = new THREE.PointLight(0xffffff, 1.5);
+		pointLight.castShadow = true;
+		pointLight.position.set(0, 3, 0);
+		scene.add(pointLight);*/
+		//
+
+		const light = new THREE.Group();
+		addLight(light, {x : 0, y : 4.5, z : 0});
+		//addLight(light, {x : 40, y : 3, z : 0});
+		scene.add(light);
+
 		// add something
 		const room = new THREE.Group();
 		room.view_mode = 2;
 		room.is_person_view_mode = false;
 		room.name = "room";
+		room.castShadow = true;
+		console.log(room);
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
 			addLoadObj(room, item.name, item.size, item.position, item.id, 2);

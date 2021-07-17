@@ -81,6 +81,7 @@ export const addRoom = (room_group, room, dim) => {
 
         const wall_mesh = createWallMesh(wall.id, wall.type, wall.direction, room.size, dim);
         wall_group.add(wall_mesh);
+        wall_group.castShadow = true;
 
         if (wall.door.length !== 0) {
             wall.door.forEach(_door => {
@@ -121,4 +122,24 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
     const door_mesh = createDoorMesh(id ,size, position, wall_type, wall_position, dim);
 
     wall_group.add(door_mesh);
+}
+
+export const addLight = (light_group, position) => {
+    const light = new THREE.PointLight(0xffffff, 1.5);
+    light.castShadow = true;
+    light.position.set(position.x, position.y, position.z);
+    light_group.add(light);
+
+    const lightHelper = new THREE.PointLightHelper(light, 1, 'blue');
+    light_group.add(lightHelper);
+
+    // spotLight
+    /*const spotLight = new THREE.SpotLight(0xffffff, 1);
+    spotLight.position.set(position.x, position.y, position.z);
+
+    light_group.add(spotLight);*/
+}
+
+export const removeLight = (light) => {
+    light.dispose();
 }

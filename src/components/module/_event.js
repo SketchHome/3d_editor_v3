@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom } from "./_common";
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ } from "./_common";
 import { addDoor, addLoadObj, addWindow } from "./_addObject"
 
 // import * as THREE from "three";
@@ -285,4 +285,33 @@ export const setInputEvent = (room, target) => {
         if (isNaN(size) || target.length === 0) return;
         resizeItem(target[0].object, size);
     });
+    document.getElementById("set_light_intensity").addEventListener("input", () => {
+        const intensity = parseFloat(document.getElementById("set_light_intensity").value);
+
+        if (isNaN(intensity)) return;
+        changeLightIntensity(room.parent.children[0], intensity);
+        //console.log(intensity);
+    });
+    document.getElementById("set_light_positionx").addEventListener("input", () => {
+        const positionX = parseInt(document.getElementById("set_light_positionx").value);
+
+        if (isNaN(positionX)) return;
+        setLightPositionX(room.parent.children[0], positionX);
+        console.log(positionX);
+    });
+    document.getElementById("set_light_positiony").addEventListener("input", () => {
+        const positionY = parseInt(document.getElementById("set_light_positiony").value);
+
+        if (isNaN(positionY)) return;
+        setLightPositionY(room.parent.children[0], positionY);
+        console.log(positionY);
+    });
+    document.getElementById("set_light_positionz").addEventListener("input", () => {
+        const positionZ = parseInt(document.getElementById("set_light_positionz").value);
+
+        if (isNaN(positionZ)) return;
+        setLightPositionZ(room.parent.children[0], positionZ);
+        console.log(positionZ);
+    });
+
 }
