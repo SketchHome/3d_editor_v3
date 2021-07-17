@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
-import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh } from "./_createMesh"
+import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh, createLightObject } from "./_createMesh"
 
 export const addSquare = (scene) => {
     var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -125,19 +125,10 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
 }
 
 export const addLight = (light_group, position) => {
-    const light = new THREE.PointLight(0xffffff, 1.5);
-    light.castShadow = true;
-    light.position.set(position.x, position.y, position.z);
-    light_group.add(light);
-
-    const lightHelper = new THREE.PointLightHelper(light, 1, 'blue');
-    light_group.add(lightHelper);
-
-    // spotLight
-    /*const spotLight = new THREE.SpotLight(0xffffff, 1);
-    spotLight.position.set(position.x, position.y, position.z);
-
-    light_group.add(spotLight);*/
+   const light = createLightObject(position);
+   light_group.add(light);
+   const lightHelper = new THREE.DirectionalLightHelper(light, 1, 'blue');
+   light_group.add(lightHelper);
 }
 
 export const removeLight = (light) => {

@@ -44,16 +44,12 @@ class Editor extends Component {
 		dragControls.transformGroup = true;
 		dragControls.enabled = false;
 
-		// add shadow
-		/*var pointLight = new THREE.PointLight(0xffffff, 1.5);
-		pointLight.castShadow = true;
-		pointLight.position.set(0, 3, 0);
-		scene.add(pointLight);*/
-		//
-
 		const light = new THREE.Group();
-		addLight(light, {x : 0, y : 4.5, z : 0});
-		//addLight(light, {x : 40, y : 3, z : 0});
+		var ambiendLight = new THREE.AmbientLight(0xffffff, 0.55);
+		light.add(ambiendLight);
+		addLight(light, {x : 0, y : 30, z : 0}, 0);
+		light.name = 'light_group';
+		console.log(light);
 		scene.add(light);
 
 		// add something
@@ -61,8 +57,6 @@ class Editor extends Component {
 		room.view_mode = 2;
 		room.is_person_view_mode = false;
 		room.name = "room";
-		room.castShadow = true;
-		console.log(room);
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
 			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
@@ -74,7 +68,7 @@ class Editor extends Component {
 		// set event
 		setKeyboardEvent(controls, camera, room);
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, controls, scene, target, drag_target, room);
+		setButtonEvent(camera, controls, scene, target, drag_target, room, light);
 		setInputEvent(room, target);
 
 		const animate = function () {

@@ -106,7 +106,7 @@ const Detailer = () => {
                     <tbody>
                         <tr>
                             <td>light intensity : </td>
-                            <td><input type="range" id="set_light_intensity" step="0.1" min="0" max="3" defaultValue="1.5"></input></td>
+                            <td><input type="range" id="set_light_intensity" step="0.1" min="0" max="1.5" defaultValue="0.7"></input></td>
                         </tr>
                         <tr>
                             <td>light position X : </td>

@@ -159,3 +159,11 @@ export const createFloorMesh = (size) => {
     
     return floor_mesh;
 }
+
+export const createLightObject = (position) => {
+    const light = new THREE.DirectionalLight(0xffffff, 0.4);
+    light.castShadow = true;
+    light.position.set(position.x, position.y, position.z);
+
+    return light;
+}
