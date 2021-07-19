@@ -290,28 +290,24 @@ export const setInputEvent = (room, target) => {
 
         if (isNaN(intensity)) return;
         changeLightIntensity(room.parent.children[0], intensity);
-        //console.log(intensity);
     });
     document.getElementById("set_light_positionx").addEventListener("input", () => {
         const positionX = parseInt(document.getElementById("set_light_positionx").value);
 
         if (isNaN(positionX)) return;
         setLightPositionX(room.parent.children[0], positionX);
-        console.log(positionX);
     });
     document.getElementById("set_light_positiony").addEventListener("input", () => {
         const positionY = parseInt(document.getElementById("set_light_positiony").value);
 
         if (isNaN(positionY)) return;
         setLightPositionY(room.parent.children[0], positionY);
-        console.log(positionY);
     });
     document.getElementById("set_light_positionz").addEventListener("input", () => {
         const positionZ = parseInt(document.getElementById("set_light_positionz").value);
 
         if (isNaN(positionZ)) return;
         setLightPositionZ(room.parent.children[0], positionZ);
-        console.log(positionZ);
     });
 
 }
