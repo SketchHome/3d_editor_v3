@@ -288,3 +288,27 @@ export const setLightPositionZ = (lightGroup, positionZ) => {
         light.position.z = positionZ;
     })
 }
+
+export const setCeilingVisible = (room) => {
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "floor") {
+            group.children.forEach((mesh) => {
+                if (mesh.name === "ceiling") {
+                    mesh.visible = true;
+                }
+            })
+        }
+    });
+}
+
+export const setCeilingInvisible = (room) => {
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "floor") {
+            group.children.forEach((mesh) => {
+                if (mesh.name  === "ceiling") {
+                    mesh.visible = false;
+                }
+            })
+        }
+    });
+}

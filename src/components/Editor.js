@@ -63,8 +63,6 @@ class Editor extends Component {
 		});
 		scene.add(room);
 
-		console.log(scene);
-
 		// set event
 		setKeyboardEvent(controls, camera, room);
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);

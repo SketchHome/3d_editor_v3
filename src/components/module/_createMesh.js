@@ -160,6 +160,19 @@ export const createFloorMesh = (size) => {
     return floor_mesh;
 }
 
+export const createCeilingMesh = (size) => {
+    const material = new THREE.MeshLambertMaterial({ color: "#e6e6e6" });
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const ceiling_mesh = new THREE.Mesh(geometry, material);
+    
+    ceiling_mesh.scale.set(size.x, 0.1, size.z);
+    ceiling_mesh.position.setY(-0.05 + 3);
+    ceiling_mesh.name = "ceiling";
+    ceiling_mesh.visible = false;
+    
+    return ceiling_mesh;
+}
+
 export const createLightObject = (position) => {
     const light = new THREE.DirectionalLight(0xffffff, 0.4);
     light.castShadow = true;
