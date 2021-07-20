@@ -99,6 +99,30 @@ const Detailer = () => {
                     </tbody>
                 </table>
             </div>
+            <br />
+            <div>
+                light
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>light intensity : </td>
+                            <td><input type="range" id="set_light_intensity" step="0.1" min="0" max="1.5" defaultValue="0.7"></input></td>
+                        </tr>
+                        <tr>
+                            <td>light position X : </td>
+                            <td><input type="number" id="set_light_positionx" step="1" min="0" max="300" defaultValue="0"></input></td>
+                        </tr>
+                        <tr>
+                            <td>light position Y : </td>
+                            <td><input type="number" id="set_light_positiony" step="1" min="3" max="300" defaultValue="3"></input></td>
+                        </tr>
+                        <tr>
+                            <td>light position Z : </td>
+                            <td><input type="number" id="set_light_positionz" step="1" min="0" max="300" defaultValue="0"></input></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
-import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh } from "./_createMesh"
+import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh, createLightObject } from "./_createMesh"
 
 export const addSquare = (scene) => {
     var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -48,7 +48,11 @@ export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) =>
                 object.name = `group_${id}`;
                 object.obj_size = { "x": size.x, "y": size.y, "z": size.z };
                 object.obj_position = { "x": position.x, "y": position.y, "z": position.z };
-                object.children.forEach(child => { child.name = "load_object_part"; });
+                object.children.forEach(child => { 
+                    child.name = "load_object_part";
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                 });
                 room.add(object);
             },
             (xhr) => {
@@ -77,6 +81,7 @@ export const addRoom = (room_group, room, dim) => {
 
         const wall_mesh = createWallMesh(wall.id, wall.type, wall.direction, room.size, dim);
         wall_group.add(wall_mesh);
+        wall_group.castShadow = true;
 
         if (wall.door.length !== 0) {
             wall.door.forEach(_door => {
@@ -117,4 +122,15 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
     const door_mesh = createDoorMesh(id ,size, position, wall_type, wall_position, dim);
 
     wall_group.add(door_mesh);
+}
+
+export const addLight = (light_group, position) => {
+   const light = createLightObject(position);
+   light_group.add(light);
+   const lightHelper = new THREE.DirectionalLightHelper(light, 1, 'blue');
+   light_group.add(lightHelper);
+}
+
+export const removeLight = (light) => {
+    light.dispose();
 }

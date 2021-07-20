@@ -5,7 +5,7 @@ import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
-import { addLoadObj, addRoom } from "./module/_addObject";
+import { addLight, addLoadObj, addRoom } from "./module/_addObject";
 
 import Detailer from "./Detailer/Detailer"
 
@@ -24,11 +24,15 @@ class Editor extends Component {
 
 		renderer.setClearColor("#ffffff")
 		renderer.setSize(width, height);
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		renderer.shadowMap.renderReverseSided = false;
 		camera.position.y = 10;
 		this.mount.appendChild(renderer.domElement);
 
-		var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
-		scene.add( ambientLight );
+		//var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
+		//scene.add( ambientLight );
+
 		let target = [];
 		let drag_target = [];
 		const controls = new OrbitControls(camera, renderer.domElement);
@@ -39,6 +43,14 @@ class Editor extends Component {
 		controls.enabled = false;
 		dragControls.transformGroup = true;
 		dragControls.enabled = false;
+
+		const light = new THREE.Group();
+		var ambiendLight = new THREE.AmbientLight(0xffffff, 0.55);
+		light.add(ambiendLight);
+		addLight(light, {x : 0, y : 30, z : 0}, 0);
+		light.name = 'light_group';
+		console.log(light);
+		scene.add(light);
 
 		// add something
 		const room = new THREE.Group();
@@ -51,10 +63,12 @@ class Editor extends Component {
 		});
 		scene.add(room);
 
+		console.log(scene);
+
 		// set event
 		setKeyboardEvent(controls, camera, room);
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, controls, scene, target, drag_target, room);
+		setButtonEvent(camera, controls, scene, target, drag_target, room, light);
 		setInputEvent(room, target);
 
 		const animate = function () {

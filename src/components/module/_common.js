@@ -260,3 +260,31 @@ const findAllObject = (obj) => {
         return temp;
     }
 }
+
+export const changeLightIntensity = (lightGroup, intensity) => {
+    lightGroup.children.forEach((light) => {
+        console.log(light);
+        light.intensity = intensity;
+    })
+}
+
+export const setLightPositionX = (lightGroup, positionX) => {
+    console.log(lightGroup.children[0]);
+    lightGroup.children.forEach((light) => {
+        light.position.x = positionX;
+    })
+}
+
+export const setLightPositionY = (lightGroup, positionY) => {
+    console.log(lightGroup.children[0]);
+    lightGroup.children.forEach((light) => {
+        light.position.y = positionY;
+    })
+}
+
+export const setLightPositionZ = (lightGroup, positionZ) => {
+    console.log(lightGroup.children[0]);
+    lightGroup.children.forEach((light) => {
+        light.position.z = positionZ;
+    })
+}
