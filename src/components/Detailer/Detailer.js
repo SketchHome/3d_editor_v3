@@ -21,7 +21,7 @@ const Detailer = () => {
             </div>
             <br />
             <div>
-                <div>target: <span id="target_name">Invisible</span></div>
+                <div>target: <span id="target_name"></span></div>
                 <button id="REMOVE_btn" style={{ width: "120px" }}>REMOVE</button>
                 <br />
                 <button id="ROTATE_H_btn" style={{ width: "120px" }}>ROTATE(H)</button>
@@ -29,7 +29,7 @@ const Detailer = () => {
             </div>
             <br />
             <div>
-                <div>Ceiling : <span id="ceiling_visibility"></span></div>
+                <div>Ceiling : <span id="ceiling_visibility">Invisible</span></div>
                 <button id="show_ceiling" style={{ width: "120px" }}>SHOW CEILING</button>
                 <button id="hide_ceiling" style={{ width: "120px" }}>HIDE CEILING</button>
             </div>
