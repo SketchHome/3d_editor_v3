@@ -49,7 +49,6 @@ class Editor extends Component {
 		light.add(ambiendLight);
 		addLight(light, {x : 0, y : 30, z : 0}, 0);
 		light.name = 'light_group';
-		console.log(light);
 		scene.add(light);
 
 		// add something
@@ -57,13 +56,20 @@ class Editor extends Component {
 		room.view_mode = 2;
 		room.is_person_view_mode = false;
 		room.name = "room";
-		addRoom(room, room_data.room, 2);
-		room_data.room.item.forEach(item => {
-			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
-		});
+
+		room_data.room.forEach(_room => {
+			const room_group = new THREE.Group();
+			room_group.name = `group_room_${_room.id}`;
+
+			addRoom(room_group, _room, 2);
+			_room.item.forEach(item => {
+				addLoadObj(room_group, item.name, item.size, item.position, item.id, 2);
+			});
+			room.add(room_group)
+		})
 		scene.add(room);
 
-		console.log(scene);
+		console.log(scene)
 
 		// set event
 		setKeyboardEvent(controls, camera, room);

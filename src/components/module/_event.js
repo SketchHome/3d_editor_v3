@@ -110,21 +110,24 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
-        set2DMODE(camera, controls, room);
+        if (room.children.length > 0)
+            room.children.forEach(_room => set2DMODE(camera, controls, _room));
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = false;
-        set3DMODE(camera, controls, room);
+        if (room.children.length > 0)
+            room.children.forEach(_room => set3DMODE(camera, controls, _room));
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = true;
-        setPersonViewMode(camera, controls, room);
+        if (room.children.length > 0)
+            room.children.forEach(_room => setPersonViewMode(camera, controls, _room));
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 

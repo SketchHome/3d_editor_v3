@@ -79,7 +79,7 @@ export const addRoom = (room_group, room, dim) => {
         const wall_group = new THREE.Group();
         wall_group.name = `group_${wall.id}`;
 
-        const wall_mesh = createWallMesh(wall.id, wall.type, wall.direction, room.size, dim);
+        const wall_mesh = createWallMesh(wall.id, wall.type, wall.direction, room.size, dim, room.position);
         wall_group.add(wall_mesh);
         wall_group.castShadow = true;
 
@@ -104,11 +104,11 @@ export const addRoom = (room_group, room, dim) => {
         room_group.add(wall_group);
     });
 
-    addFloor(room_group, room.size);
+    addFloor(room_group, room.size, room.position);
 };
 
-export const addFloor = (room_group, room_size) => {
-    const floor_mesh = createFloorMesh(room_size);
+export const addFloor = (room_group, room_size, room_position) => {
+    const floor_mesh = createFloorMesh(room_size, room_position);
     const floor_group = new THREE.Group();
     floor_group.name = "group_floor";
     floor_group.add(floor_mesh);
