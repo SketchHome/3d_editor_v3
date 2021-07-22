@@ -104,13 +104,17 @@ export const addRoom = (room_group, room, dim) => {
         room_group.add(wall_group);
     });
 
-    const floor_mesh = createFloorMesh(room.size);
+    addFloor(room_group, room.size);
+};
+
+export const addFloor = (room_group, room_size) => {
+    const floor_mesh = createFloorMesh(room_size);
     const floor_group = new THREE.Group();
     floor_group.name = "group_floor";
     floor_group.add(floor_mesh);
     
     room_group.add(floor_group);
-};
+}
 
 export const addWindow = (wall_group, id, size, position, wall_type, wall_position, dim) => {
     const window_mesh = createWindowMesh(id ,size, position, wall_type, wall_position, dim);
