@@ -29,6 +29,12 @@ const Detailer = () => {
             </div>
             <br />
             <div>
+                <div>Ceiling : <span id="ceiling_visibility">Invisible</span></div>
+                <button id="show_ceiling" style={{ width: "120px" }}>SHOW CEILING</button>
+                <button id="hide_ceiling" style={{ width: "120px" }}>HIDE CEILING</button>
+            </div>
+            <br />
+            <div>
                 room size
                 <table>
                     <tbody>
