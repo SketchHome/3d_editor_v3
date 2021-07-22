@@ -130,8 +130,6 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
 export const addLight = (light_group, position) => {
    const light = createLightObject(position);
    light_group.add(light);
-   const lightHelper = new THREE.DirectionalLightHelper(light, 1, 'blue');
-   light_group.add(lightHelper);
 }
 
 export const removeLight = (light) => {

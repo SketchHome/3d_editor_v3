@@ -152,6 +152,8 @@ const limitWallSize = (wall) => {
         default :
             break;
     }
+
+    return minValue[0];
 }
 
 const resizeWall = (wall, width, height) => {
@@ -311,4 +313,15 @@ export const setCeilingInvisible = (room) => {
             })
         }
     });
+}
+
+export const makeCeilingNotIntersectable = (intersects) => {
+    if (intersects.length === 0) return intersects;
+
+    intersects.forEach( (object) => {
+        if (object.name === "ceiling") {
+            console.log(object.name);
+        }
+    });
+
 }

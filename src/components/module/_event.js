@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, setCeilingVisible, setCeilingInvisible} from "./_common";
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, setCeilingVisible, setCeilingInvisible, makeCeilingNotIntersectable} from "./_common";
 import { addDoor, addLoadObj, addWindow } from "./_addObject"
 
 // import * as THREE from "three";
@@ -68,7 +68,12 @@ export const setMouseEvent = (width, height,
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        let intersects = raycaster.intersectObjects(scene.children, true);
+        if (intersects.length !== 0){
+            if (intersects[0].object.visible === false) {
+                intersects.shift();
+            }
+        }
         setTarget(intersects, target, drag_target);
     }, false);
 
@@ -80,6 +85,7 @@ export const setMouseEvent = (width, height,
 
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
+        console.log(intersects);
         setDragTarget(intersects, target, drag_target);
     }, false);
 
