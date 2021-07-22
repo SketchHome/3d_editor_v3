@@ -69,11 +69,7 @@ export const setMouseEvent = (width, height,
 
         raycaster.setFromCamera(mouse, camera);
         let intersects = raycaster.intersectObjects(scene.children, true);
-        if (intersects.length !== 0){
-            if (intersects[0].object.visible === false) {
-                intersects.shift();
-            }
-        }
+        intersects = makeCeilingNotIntersectable(intersects);
         setTarget(intersects, target, drag_target);
     }, false);
 

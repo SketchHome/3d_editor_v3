@@ -318,10 +318,9 @@ export const setCeilingInvisible = (room) => {
 export const makeCeilingNotIntersectable = (intersects) => {
     if (intersects.length === 0) return intersects;
 
-    intersects.forEach( (object) => {
-        if (object.name === "ceiling") {
-            console.log(object.name);
-        }
-    });
-
+    if (intersects[0].object.visible === false) {
+        intersects.shift();
+        return intersects;
+    }
+    return intersects;
 }
