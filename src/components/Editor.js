@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import * as THREE from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { PointerLockControls} from "three/examples/jsm/controls/PointerLockControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
 import { addLoadObj, addRoom } from "./module/_addObject";
@@ -33,6 +34,7 @@ class Editor extends Component {
 		let drag_target = [];
 		const controls = new OrbitControls(camera, renderer.domElement);
 		const dragControls = new DragControls(drag_target, camera, renderer.domElement);
+		const viewControls = new PointerLockControls(camera, renderer.domElement);
 		const mouse = new THREE.Vector2();
 		const raycaster = new THREE.Raycaster();
 
@@ -52,9 +54,9 @@ class Editor extends Component {
 		scene.add(room);
 
 		// set event
-		setKeyboardEvent(controls, camera, room);
+		setKeyboardEvent(viewControls, raycaster, camera, scene, room);
 		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, controls, scene, target, drag_target, room);
+		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room);
 		setInputEvent(room, target);
 
 		const animate = function () {
