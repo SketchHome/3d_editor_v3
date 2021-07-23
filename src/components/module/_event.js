@@ -4,11 +4,13 @@ import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } fro
 import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom } from "./_common";
 import { addDoor, addLoadObj, addWindow } from "./_addObject"
 
-// import * as THREE from "three";
+import * as THREE from "three";
 
-export const setKeyboardEvent = (viewControls, raycaster, camera, scene, room) => {
+export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
     window.addEventListener("keydown", (event) => {
+        let dir = new THREE.Vector3();
+
         const distance = 0.1;
 
         let eventCode = event.code;
@@ -25,6 +27,12 @@ export const setKeyboardEvent = (viewControls, raycaster, camera, scene, room) =
         if(eventCode === "KeyD"){
             viewControls.moveRight(distance);
         }
+
+        raycaster.set(controls.target, dir.subVectors(camera.position, controls.target).normalize());
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        console.log("intersects:", intersects);
+        // console.log(intersects[0].distance);
+        console.log("distance:", controls.target.distanceTo(camera.position));
     });
 }
 
