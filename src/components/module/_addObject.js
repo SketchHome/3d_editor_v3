@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
-import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh, createLightObject, createCeilingMesh } from "./_createMesh"
+import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh, createLightObject, createCeilingMesh} from "./_createMesh"
 
 export const addSquare = (scene) => {
     var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -109,10 +109,11 @@ export const addRoom = (room_group, room, dim) => {
     floor_group.name = "group_floor";
     floor_group.add(floor_mesh);
 
-    const ceiling_mesh = createCeilingMesh(room.size);
-    floor_group.add(ceiling_mesh);
+    const ceiling_group = new THREE.Group();
+    ceiling_group.name = "group_ceiling";
     
     room_group.add(floor_group);
+    room_group.add(ceiling_group);
 };
 
 export const addWindow = (wall_group, id, size, position, wall_type, wall_position, dim) => {
@@ -125,6 +126,27 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
     const door_mesh = createDoorMesh(id ,size, position, wall_type, wall_position, dim);
 
     wall_group.add(door_mesh);
+}
+
+export const addCeiling = (room) => {
+    let ceilings = [];
+
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "floor") {
+            group.children.forEach((mesh) => {
+                const ceiling = createCeilingMesh(mesh.scale);
+                ceilings.push(ceiling);
+            });
+        }
+    });
+
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "ceiling") {
+            ceilings.forEach((ceiling) => {
+                group.add(ceiling);
+            })
+        }
+    });
 }
 
 export const addLight = (light_group, position) => {

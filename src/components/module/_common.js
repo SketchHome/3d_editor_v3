@@ -291,36 +291,14 @@ export const setLightPositionZ = (lightGroup, positionZ) => {
     })
 }
 
-export const setCeilingVisible = (room) => {
+export const removeCeiling = (room) => {
     room.children.forEach((group) => {
-        if (group.name.split("_")[1] === "floor") {
+        if (group.name.split("_")[1] === "ceiling") {
+            if(group.children.length === 0) return;
             group.children.forEach((mesh) => {
-                if (mesh.name === "ceiling") {
-                    mesh.visible = true;
-                }
+                mesh.parent.remove(mesh);
+                mesh.geometry.dispose();
             })
         }
     });
-}
-
-export const setCeilingInvisible = (room) => {
-    room.children.forEach((group) => {
-        if (group.name.split("_")[1] === "floor") {
-            group.children.forEach((mesh) => {
-                if (mesh.name  === "ceiling") {
-                    mesh.visible = false;
-                }
-            })
-        }
-    });
-}
-
-export const makeCeilingNotIntersectable = (intersects) => {
-    if (intersects.length === 0) return intersects;
-
-    if (intersects[0].object.visible === false) {
-        intersects.shift();
-        return intersects;
-    }
-    return intersects;
 }

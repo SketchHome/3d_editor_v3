@@ -168,7 +168,6 @@ export const createCeilingMesh = (size) => {
     ceiling_mesh.scale.set(size.x, 0.1, size.z);
     ceiling_mesh.position.setY(-0.05 + 3);
     ceiling_mesh.name = "ceiling";
-    ceiling_mesh.visible = false;
     
     return ceiling_mesh;
 }
