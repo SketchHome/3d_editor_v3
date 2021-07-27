@@ -108,6 +108,9 @@ export const resizeRoom = (room, width, height) => {
                 break;
         }
     });
+
+    room.size.x = width;
+    room.size.z = height;
 }
 
 export const resizeItem = (item, size) => {
