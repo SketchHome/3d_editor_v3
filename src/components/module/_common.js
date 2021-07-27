@@ -101,6 +101,9 @@ export const resizeRoom = (room, width, height) => {
                 group.children[0].scale.setX(width);
                 group.children[0].scale.setZ(height);
                 break;
+            case "ceiling":
+                group.children[0].scale.setX(width);
+                group.children[0].scale.setZ(height);
             default:
                 break;
         }
