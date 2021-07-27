@@ -4,44 +4,46 @@ import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } fro
 import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom } from "./_common";
 import { addDoor, addLoadObj, addWindow } from "./_addObject"
 
-import * as THREE from "three";
-
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
     window.addEventListener("keydown", (event) => {
-        let dir = new THREE.Vector3();
-
-        const distance = 0.1;
+        const distance = 0.075;
 
         let eventCode = event.code;
 
-        if(eventCode === "KeyW"){
-            viewControls.moveForward(distance);
-        }
-        if(eventCode === "KeyS"){
-            viewControls.moveForward(-distance);
-        }
-        if(eventCode === "KeyA"){
-            viewControls.moveRight(-distance);
-        }
-        if(eventCode === "KeyD"){
-            viewControls.moveRight(distance);
+        if(viewControls.isLocked === true){
+            switch (eventCode){
+                case "KeyW" :
+                    viewControls.moveForward(distance);
+                    break;
+                case "KeyS" :
+                    viewControls.moveForward(-distance);
+                    break;
+                case "KeyA" :
+                    viewControls.moveRight(-distance);
+                    break;
+                case "KeyD" :
+                    viewControls.moveRight(distance);
+                    break;
+                case "Escape" :
+                    viewControls.isLocked = false;
+                    break;
+            }
         }
 
-        raycaster.set(controls.target, dir.subVectors(camera.position, controls.target).normalize());
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        console.log("intersects:", intersects);
-        // console.log(intersects[0].distance);
-        console.log("distance:", controls.target.distanceTo(camera.position));
+        if(viewControls.isLocked === false && eventCode === "KeyR"){ //restart
+            viewControls.lock();
+        }
     });
 }
 
 export const setMouseEvent = (width, height,
-    mouse, camera, scene, raycaster,
+    mouse, viewControls, camera, scene, raycaster,
     target, drag_target, dragControls, room) => {
 
     // normal click event - set target 		
     window.addEventListener("mousedown", (event) => {
+        if (viewControls.isLocked === true) return;
         if (event.target.tagName !== "CANVAS") return;
         setMouse(event, width, height, mouse);
 
@@ -102,7 +104,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     document.getElementById("PersonView_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = true;
-        setPersonViewMode(camera, viewControls, controls, room);
+        setPersonViewMode(viewControls, controls, room);
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 

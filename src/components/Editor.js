@@ -55,7 +55,7 @@ class Editor extends Component {
 
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
-		setMouseEvent(width, height, mouse, camera, scene, raycaster, target, drag_target, dragControls, room);
+		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room);
 		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room);
 		setInputEvent(room, target);
 
