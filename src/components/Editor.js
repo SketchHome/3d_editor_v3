@@ -57,6 +57,7 @@ class Editor extends Component {
 		room.view_mode = 2;
 		room.is_person_view_mode = false;
 		room.name = "room";
+		room.size = room_data.room.size;
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
 			addLoadObj(room, item.name, item.size, item.position, item.id, 2);

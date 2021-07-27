@@ -298,7 +298,8 @@ export const removeCeiling = (room) => {
             group.children.forEach((mesh) => {
                 mesh.parent.remove(mesh);
                 mesh.geometry.dispose();
-            })
+            });
+            group.parent.remove(group);
         }
     });
 }

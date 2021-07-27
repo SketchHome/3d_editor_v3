@@ -108,12 +108,8 @@ export const addRoom = (room_group, room, dim) => {
     const floor_group = new THREE.Group();
     floor_group.name = "group_floor";
     floor_group.add(floor_mesh);
-
-    const ceiling_group = new THREE.Group();
-    ceiling_group.name = "group_ceiling";
     
     room_group.add(floor_group);
-    room_group.add(ceiling_group);
 };
 
 export const addWindow = (wall_group, id, size, position, wall_type, wall_position, dim) => {
@@ -129,24 +125,12 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
 }
 
 export const addCeiling = (room) => {
-    let ceilings = [];
+    const ceiling = createCeilingMesh(room.size);
 
-    room.children.forEach((group) => {
-        if (group.name.split("_")[1] === "floor") {
-            group.children.forEach((mesh) => {
-                const ceiling = createCeilingMesh(mesh.scale);
-                ceilings.push(ceiling);
-            });
-        }
-    });
-
-    room.children.forEach((group) => {
-        if (group.name.split("_")[1] === "ceiling") {
-            ceilings.forEach((ceiling) => {
-                group.add(ceiling);
-            })
-        }
-    });
+    const group_ceiling = new THREE.Group();
+    group_ceiling.name = "group_ceiling";
+    group_ceiling.add(ceiling);
+    room.add(group_ceiling);
 }
 
 export const addLight = (light_group, position) => {
