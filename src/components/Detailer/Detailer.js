@@ -29,6 +29,15 @@ const Detailer = () => {
             </div>
             <br />
             <div>
+                <div>Ceiling : <span id="ceiling_visibility">Invisible</span></div>
+                <button id="show_ceiling" style={{ width: "120px" }}>SHOW CEILING</button>
+                <button id="hide_ceiling" style={{ width: "120px" }}>HIDE CEILING</button>
+            </div>
+            <br />
+                <div>Show room info</div>
+                <button id="Show_room_info" style={{ width: "120px" }}>SHOW ROOM INFO</button>
+            <br />
+            <div>
                 room size
                 <table>
                     <tbody>
@@ -95,6 +104,30 @@ const Detailer = () => {
                                 <input type="radio" id="wall_color_4" name="wall_color" value="#487e95" /><label style={{ "backgroundColor": "#487e95", "color": "#487e95" }} htmlFor="wall_color_4">clr</label>
                                 <input type="radio" id="wall_color_5" name="wall_color" value="#e9b0df" /><label style={{ "backgroundColor": "#e9b0df", "color": "#e9b0df" }} htmlFor="wall_color_5">clr</label>
                             </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <div>
+                light
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>light intensity : </td>
+                            <td><input type="range" id="set_light_intensity" step="0.1" min="0" max="1.5" defaultValue="0.7"></input></td>
+                        </tr>
+                        <tr>
+                            <td>light position X : </td>
+                            <td><input type="number" id="set_light_positionx" step="1" min="0" max="300" defaultValue="0"></input></td>
+                        </tr>
+                        <tr>
+                            <td>light position Y : </td>
+                            <td><input type="number" id="set_light_positiony" step="1" min="3" max="300" defaultValue="3"></input></td>
+                        </tr>
+                        <tr>
+                            <td>light position Z : </td>
+                            <td><input type="number" id="set_light_positionz" step="1" min="0" max="300" defaultValue="0"></input></td>
                         </tr>
                     </tbody>
                 </table>

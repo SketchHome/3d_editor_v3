@@ -1,8 +1,8 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom } from "./_common";
-import { addDoor, addLoadObj, addWindow } from "./_addObject"
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling} from "./_common";
+import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
@@ -90,21 +90,28 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
+        removeCeiling(room);
         set2DMODE(camera, controls, room);
+        document.getElementById("ceiling_visibility").innerHTML = "Invisible";
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = false;
+        removeCeiling(room);
         set3DMODE(camera, controls, room);
+        document.getElementById("ceiling_visibility").innerHTML = "Invisible";
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = true;
+        addCeiling(room);
         setPersonViewMode(viewControls, controls, room);
+        document.getElementById("ceiling_visibility").innerHTML = "Visible";
+
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
@@ -157,6 +164,20 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         const window_size = { "x": 2, "y": 2, "z": 0.3 };
         const window_position = { "x": 0, "y": 1.7 };
         addWindow(wall.parent, window_id, window_size, window_position, wall.wall_type, wall.position, room.view_mode);
+    });
+
+    document.getElementById("Show_room_info").addEventListener("click", () => {
+        console.log(room);
+    });
+
+    document.getElementById("show_ceiling").addEventListener("click", () => {
+        addCeiling(room);
+        document.getElementById("ceiling_visibility").innerHTML = "Visible";
+    });
+
+    document.getElementById("hide_ceiling").addEventListener("click", () => {
+        removeCeiling(room);
+        document.getElementById("ceiling_visibility").innerHTML = "Invisible";
     });
 
     // 나중에 분리 필요
@@ -265,4 +286,29 @@ export const setInputEvent = (room, target) => {
         if (isNaN(size) || target.length === 0) return;
         resizeItem(target[0].object, size);
     });
+    document.getElementById("set_light_intensity").addEventListener("input", () => {
+        const intensity = parseFloat(document.getElementById("set_light_intensity").value);
+
+        if (isNaN(intensity)) return;
+        changeLightIntensity(room.parent.children[0], intensity);
+    });
+    document.getElementById("set_light_positionx").addEventListener("input", () => {
+        const positionX = parseInt(document.getElementById("set_light_positionx").value);
+
+        if (isNaN(positionX)) return;
+        setLightPositionX(room.parent.children[0], positionX);
+    });
+    document.getElementById("set_light_positiony").addEventListener("input", () => {
+        const positionY = parseInt(document.getElementById("set_light_positiony").value);
+
+        if (isNaN(positionY)) return;
+        setLightPositionY(room.parent.children[0], positionY);
+    });
+    document.getElementById("set_light_positionz").addEventListener("input", () => {
+        const positionZ = parseInt(document.getElementById("set_light_positionz").value);
+
+        if (isNaN(positionZ)) return;
+        setLightPositionZ(room.parent.children[0], positionZ);
+    });
+
 }
