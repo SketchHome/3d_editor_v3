@@ -1,6 +1,7 @@
 import React from "react";
 
 import ItemList from "./ItemList";
+import WallList from "./WallList";
 
 const Detailer = () => {
     return (
@@ -65,6 +66,9 @@ const Detailer = () => {
             </div>
             <br />
             <ItemList />
+            <br />
+            <br />
+            <WallList />
             <br />
             <div>
                 door, window list
