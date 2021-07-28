@@ -4,66 +4,46 @@ import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } fro
 import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling} from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
 
-// import * as THREE from "three";
-
-export const setKeyboardEvent = (controls, camera, room) => {
+export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
     window.addEventListener("keydown", (event) => {
-        var keycode = event.keyCode;
+        const distance = 0.075;
 
-        if (keycode === 87) {
-            const distance = 0.5;
-            camera.translateZ(-distance);
-            camera.position.setY(1.3);
+        let eventCode = event.code;
+
+        if(viewControls.isLocked === true){
+            switch (eventCode){
+                case "KeyW" :
+                    viewControls.moveForward(distance);
+                    break;
+                case "KeyS" :
+                    viewControls.moveForward(-distance);
+                    break;
+                case "KeyA" :
+                    viewControls.moveRight(-distance);
+                    break;
+                case "KeyD" :
+                    viewControls.moveRight(distance);
+                    break;
+                case "Escape" :
+                    viewControls.isLocked = false;
+                    break;
+            }
+        }
+
+        if(viewControls.isLocked === false && eventCode === "KeyR"){ //restart
+            viewControls.lock();
         }
     });
-    // const moveCamera = async (distance) => {
-    //     for (let i = 0; i < 7; i++) {
-    //         camera.translateX(distance);
-    //         // camera.translateY(distance);
-    //         await sleep(70);
-    //     }
-    // }
-
-    // const sleep = (ms) => {
-    //     return new Promise((resolve) => {
-    //         setTimeout(resolve, ms);
-    //     });
-    // }   
-    // function onDocumentKeyDown(event) {
-    //     var delta = 0.2;
-    //     event = event || window.event;
-    //     var keycode = event.keyCode;
-    //     switch (keycode) {
-    //         case 87:
-    //             console.log(camera.position)
-    //             // camera.position.x = camera.position.x - delta;
-    //             break;
-    //         case 65:
-    //             camera.position.z = camera.position.z - delta;
-    //             break;
-    //         case 83: 
-    //             camera.position.x = camera.position.x + delta;
-    //             break;
-    //         case 68:
-    //             camera.position.z = camera.position.z + delta;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     document.addEventListener('keyup', onDocumentKeyUp, false);
-    // }
-    // function onDocumentKeyUp(event) {
-    //     document.removeEventListener('keydown', onDocumentKeyDown, false);
-    // }
 }
 
 export const setMouseEvent = (width, height,
-    mouse, camera, scene, raycaster,
+    mouse, viewControls, camera, scene, raycaster,
     target, drag_target, dragControls, room) => {
 
     // normal click event - set target 		
     window.addEventListener("mousedown", (event) => {
+        if (viewControls.isLocked === true) return;
         if (event.target.tagName !== "CANVAS") return;
         setMouse(event, width, height, mouse);
 
@@ -106,7 +86,7 @@ export const setMouseEvent = (width, height,
 
 };
 
-export const setButtonEvent = (camera, controls, scene, target, drag_target, room) => {
+export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
@@ -129,8 +109,9 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
         room.view_mode = 3;
         room.is_person_view_mode = true;
         addCeiling(room);
-        setPersonViewMode(camera, controls, room);
+        setPersonViewMode(viewControls, controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
+
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
