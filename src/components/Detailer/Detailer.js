@@ -34,6 +34,9 @@ const Detailer = () => {
                 <button id="hide_ceiling" style={{ width: "120px" }}>HIDE CEILING</button>
             </div>
             <br />
+                <div>Show room info</div>
+                <button id="Show_room_info" style={{ width: "120px" }}>SHOW ROOM INFO</button>
+            <br />
             <div>
                 room size
                 <table>

@@ -1,8 +1,8 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, setCeilingVisible, setCeilingInvisible, makeCeilingNotIntersectable} from "./_common";
-import { addDoor, addLoadObj, addWindow } from "./_addObject"
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling} from "./_common";
+import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
 
 // import * as THREE from "three";
 
@@ -68,8 +68,7 @@ export const setMouseEvent = (width, height,
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
-        let intersects = raycaster.intersectObjects(scene.children, true);
-        intersects = makeCeilingNotIntersectable(intersects);
+        const intersects = raycaster.intersectObjects(scene.children, true);
         setTarget(intersects, target, drag_target);
     }, false);
 
@@ -81,7 +80,6 @@ export const setMouseEvent = (width, height,
 
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
-        console.log(intersects);
         setDragTarget(intersects, target, drag_target);
     }, false);
 
@@ -112,8 +110,8 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
+        removeCeiling(room);
         set2DMODE(camera, controls, room);
-        setCeilingInvisible(room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
         document.getElementById("mode_name").innerHTML = "view";
     });
@@ -121,8 +119,8 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = false;
+        removeCeiling(room);
         set3DMODE(camera, controls, room);
-        setCeilingInvisible(room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
         document.getElementById("mode_name").innerHTML = "view";
     });
@@ -130,8 +128,8 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("PersonView_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = true;
+        addCeiling(room);
         setPersonViewMode(camera, controls, room);
-        setCeilingVisible(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
@@ -186,14 +184,18 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
         const window_position = { "x": 0, "y": 1.7 };
         addWindow(wall.parent, window_id, window_size, window_position, wall.wall_type, wall.position, room.view_mode);
     });
-    // ceiling
+
+    document.getElementById("Show_room_info").addEventListener("click", () => {
+        console.log(room);
+    });
+
     document.getElementById("show_ceiling").addEventListener("click", () => {
-        setCeilingVisible(room);
+        addCeiling(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
     });
 
     document.getElementById("hide_ceiling").addEventListener("click", () => {
-        setCeilingInvisible(room);
+        removeCeiling(room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
     });
 

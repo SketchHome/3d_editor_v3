@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
-import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh, createLightObject, createCeilingMesh } from "./_createMesh"
+import { createWallMesh, createWindowMesh, createDoorMesh, createFloorMesh, createLightObject, createCeilingMesh} from "./_createMesh"
 
 export const addSquare = (scene) => {
     var geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -108,9 +108,6 @@ export const addRoom = (room_group, room, dim) => {
     const floor_group = new THREE.Group();
     floor_group.name = "group_floor";
     floor_group.add(floor_mesh);
-
-    const ceiling_mesh = createCeilingMesh(room.size);
-    floor_group.add(ceiling_mesh);
     
     room_group.add(floor_group);
 };
@@ -125,6 +122,15 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
     const door_mesh = createDoorMesh(id ,size, position, wall_type, wall_position, dim);
 
     wall_group.add(door_mesh);
+}
+
+export const addCeiling = (room) => {
+    const ceiling = createCeilingMesh(room.size);
+
+    const group_ceiling = new THREE.Group();
+    group_ceiling.name = "group_ceiling";
+    group_ceiling.add(ceiling);
+    room.add(group_ceiling);
 }
 
 export const addLight = (light_group, position) => {
