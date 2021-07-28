@@ -1,6 +1,7 @@
 import React from "react";
 
 import ItemList from "./ItemList";
+import FloorList from "./FloorList";
 
 const Detailer = () => {
     return (
@@ -81,6 +82,8 @@ const Detailer = () => {
                     </tbody>
                 </table>
             </div>
+            <br />
+            <FloorList />
             <br />
             <div>
                 <table>

@@ -51,7 +51,6 @@ class Editor extends Component {
 		light.add(ambiendLight);
 		addLight(light, {x : 0, y : 30, z : 0}, 0);
 		light.name = 'light_group';
-		console.log(light);
 		scene.add(light);
 
 		// add something

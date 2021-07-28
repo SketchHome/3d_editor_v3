@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling} from "./_common";
+import { changeFloorColor, changeFloorTexture, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling} from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
@@ -196,6 +196,18 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
             addLoadObj(room, item_name, item_path, item_size, item_position, item_id, room.view_mode);
         }, false);
     }
+
+    const floorElements = document.getElementsByClassName("Add_floor_btn");
+    for(let i = 0; i < floorElements.length; i++){
+        floorElements[i].addEventListener("click", (e) => {
+            const item_path = e.target.getAttribute("item_path") + ".jpg";
+
+            if(target.length === 0) return;
+            
+            changeFloorTexture(target[0].object, item_path);
+        })
+    }
+
 
     // change floor color
     const floor_color_radios = document.getElementsByName("floor_color");

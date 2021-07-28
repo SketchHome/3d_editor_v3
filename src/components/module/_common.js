@@ -1,4 +1,5 @@
 import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
+import * as THREE from "three";
 
 
 export const removeObject = (scene, target, drag_target) => {
@@ -98,8 +99,12 @@ export const resizeRoom = (room, width, height) => {
                 });
                 break;
             case "floor":
-                group.children[0].scale.setX(width);
-                group.children[0].scale.setZ(height);
+                const floor = group.children[0];
+
+                floor.scale.setX(width);
+                floor.scale.setZ(height);
+
+                resizeFloorTexture(floor);
                 break;
             case "ceiling":
                 group.children[0].scale.setX(width);
@@ -215,6 +220,22 @@ const relocateObject = (object) => {
             }
         }
     });
+}
+
+export const changeFloorTexture = (floor, item_path) => {
+    const texture = new THREE.TextureLoader().load(item_path);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(floor.scale.x/1.8, floor.scale.z/1.8);
+    floor.material = new THREE.MeshLambertMaterial({
+        map: texture
+    });
+}
+
+export const resizeFloorTexture = (floor) => {
+    const floorTexture = floor.material.map;
+    if(floorTexture === null) return;
+    floorTexture.repeat.set(floor.scale.x/1.8, floor.scale.z/1.8);
 }
 
 export const changeFloorColor = (room, color) => {
