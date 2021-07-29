@@ -68,10 +68,7 @@ export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) =>
     }, (error) => {
         console.log("An error happened (MTLLoader)");
         console.log(error);
-    });
-
-
-    
+    });    
 };
 
 export const addRoom = (room_group, room, dim) => {
