@@ -330,10 +330,10 @@ export const changeWallTexture = (mesh, path) => {
     texture.wrapT = THREE.RepeatWrapping;
     
     if (mesh.wall_type === "horizon") {
-        texture.repeat.set(mesh.scale.x / 1.8, mesh.scale.y / 1.8);
+        texture.repeat.set(mesh.scale.x / 0.39, mesh.scale.y / 0.79);
     }
     else {
-        texture.repeat.set(mesh.scale.z / 1.8, mesh.scale.y / 1.8);
+        texture.repeat.set(mesh.scale.z / 0.39, mesh.scale.y / 0.79);
     }
     mesh.material = new THREE.MeshLambertMaterial({
         map : texture
