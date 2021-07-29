@@ -346,12 +346,22 @@ export const resizeWallTexture = (wall, wall_type) => {
     if (texture === null) return;
     switch (wall_type) {
         case "horizon" :
-            texture.repeat.set(wall.scale.x / 1.8, wall.scale.y / 1.8);
+            texture.repeat.set(wall.scale.x / 0.39, wall.scale.y / 0.79);
             break;
         case "vertical" :
-            texture.repeat.set(wall.scale.z / 1.8, wall.scale.y / 1.8);
+            texture.repeat.set(wall.scale.z / 0.39, wall.scale.y / 0.79);
             break;
         default :
-        break;
+            break;
     }
+}
+
+export const resizeWallTextureModeChange = (room) => {
+    room.children.forEach((group) => {
+        if(group.name.split("_")[1] == "wall") {
+            group.children.forEach((wall) => {
+                resizeWallTexture(wall, wall.wall_type);
+            });
+        }
+    });
 }
