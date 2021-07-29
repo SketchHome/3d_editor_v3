@@ -226,7 +226,7 @@ export const changeFloorTexture = (floor, item_path) => {
     const texture = new THREE.TextureLoader().load(item_path);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(floor.scale.x/1.8, floor.scale.z/1.8);
+    texture.repeat.set(floor.scale.x/0.125, floor.scale.z/0.9);
     floor.material = new THREE.MeshLambertMaterial({
         map: texture
     });
@@ -235,7 +235,7 @@ export const changeFloorTexture = (floor, item_path) => {
 export const resizeFloorTexture = (floor) => {
     const floorTexture = floor.material.map;
     if(floorTexture === null) return;
-    floorTexture.repeat.set(floor.scale.x/1.8, floor.scale.z/1.8);
+    floorTexture.repeat.set(floor.scale.x/0.125, floor.scale.z/0.9);
 }
 
 export const changeFloorColor = (room, color) => {
