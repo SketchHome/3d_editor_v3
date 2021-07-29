@@ -125,6 +125,12 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
 }
 
 export const addCeiling = (room) => {
+    let ceilingExist = false;
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "ceiling") ceilingExist = true;
+    });
+
+    if(ceilingExist) return;
     const ceiling = createCeilingMesh(room.size);
 
     const group_ceiling = new THREE.Group();
