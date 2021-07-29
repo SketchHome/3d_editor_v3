@@ -110,8 +110,8 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.view_mode = 3;
         room.is_person_view_mode = true;
         addCeiling(room);
-        resizeWallTextureModeChange(room);
         setPersonViewMode(viewControls, controls, room);
+        resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
 
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
