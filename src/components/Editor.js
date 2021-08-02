@@ -47,9 +47,9 @@ class Editor extends Component {
 		dragControls.enabled = false;
 
 		const light = new THREE.Group();
-		var ambiendLight = new THREE.AmbientLight(0xffffff, 0.55);
-		light.add(ambiendLight);
-		addLight(light, {x : 0, y : 30, z : 0}, 0);
+		var ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+		light.add(ambientLight);
+		addLight(light, {x : 0, y : 30, z : 0}, 0.3);
 		light.name = 'light_group';
 		console.log(light);
 		scene.add(light);

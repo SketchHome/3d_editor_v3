@@ -172,8 +172,8 @@ export const createCeilingMesh = (size) => {
     return ceiling_mesh;
 }
 
-export const createLightObject = (position) => {
-    const light = new THREE.DirectionalLight(0xffffff, 0.4);
+export const createLightObject = (position, intensity) => {
+    const light = new THREE.DirectionalLight(0xffffff, intensity);
     light.castShadow = true;
     light.position.set(position.x, position.y, position.z);
 
