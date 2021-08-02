@@ -136,8 +136,8 @@ export const addCeiling = (room) => {
     room.add(group_ceiling);
 }
 
-export const addLight = (light_group, position) => {
-   const light = createLightObject(position);
+export const addLight = (light_group, position, intensity) => {
+   const light = createLightObject(position, intensity);
    light_group.add(light);
 }
 
