@@ -56,6 +56,9 @@ export const relocateDragTarget = (target, view_mode) => {
         else if (target.name.split("_")[0] === "window") {
             relocateWindow_3D(target);
         }
+        else if (target.name.split("_")[0] === "door") {
+            relocateDoor_3D(target);
+        }
     }
 }
 
@@ -135,6 +138,7 @@ const relocateWindow_3D = (target) => {
                 case "horizon":
                     target.position.z = obj.position.z;
                     target.position.x = target.window_position.x;
+                    console.log(target);
                     break;
                 case "vertical":
                     target.position.x = obj.position.x;
@@ -153,4 +157,64 @@ const relocateWindow_3D = (target) => {
                 target.position.y = (target.position.y > min) ? max : min;
         }
     });
+}
+
+/*const relocateDoor_3D = (target) => {
+    target.parent.children.forEach(obj => {
+        if (obj.name.split("_")[0] === "wall") {
+            // fixed x, z axis
+            switch (obj.wall_type) {
+                case "horizon":
+                    target.position.z = obj.position.z;
+                    target.position.x = target.door_position.x;
+                    break;
+                case "vertical":
+                    target.position.x = obj.position.x;
+                    target.position.z = target.door_position.z;
+                    break;
+                default:
+                    break;
+            }
+
+            // move z axis
+            const min = target.door_size.y/2;
+            const max = (obj.scale.y - target.door_size.y/2);
+            if (min < target.position.y && target.position.y < max)
+                target.door_position.y = target.position.y;
+            else 
+                target.position.y = (target.position.y > min) ? max : min;
+        }
+    });
+}*/
+
+const relocateDoor_3D = (target) => {
+    target.parent.children.forEach((obj) => { // target : door, obj : wall
+        if (obj.name.split("_")[0] === "wall") {
+            switch (obj.wall_type) {
+                case "horizon" :
+                    target.position.z = obj.position.z; // fix position
+                    //target.door_position.x = obj.position.x;
+                    const horizonMin = -1 * ((obj.scale.x / 2) - (target.scale.x / 2));
+                    const horizonMax = ((obj.scale.x / 2) - (target.scale.x / 2));
+                    if (target.position.x < horizonMin) target.position.x = horizonMin;                    
+                    else if (target.position.x > horizonMax) target.position.x = horizonMax;
+                    console.log("door position", target.position);
+                    console.log("horizon wall scale", obj.scale);
+                    break;
+                case "vertical" :
+                    target.position.x = obj.position.x; // fix position
+                    //target.door_position.z = obj.position.z;
+                    const verticalMin = -1 * ((obj.scale.z / 2) - (target.scale.x / 2))
+                    const verticalMax = ((obj.scale.z / 2) - (target.scale.x / 2));
+                    if (target.position.z < verticalMin) target.position.z = verticalMin;                    
+                    else if (target.position.z > verticalMax) target.position.z = verticalMax;
+                    break;
+                default :
+                    break;
+            }
+            target.position.y = target.scale.y / 2;
+
+
+        }
+    })
 }
