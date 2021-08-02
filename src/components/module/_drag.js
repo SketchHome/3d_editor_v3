@@ -130,27 +130,48 @@ const relocateDoor_2D = (target) => {
 const relocateWindow_3D = (target) => {
     target.parent.children.forEach(obj => {
         if (obj.name.split("_")[0] === "wall") {
+
+            console.log("target name:", target.name);
+            console.log("target parent name :", target.parent.name);
+            console.log("obj name:", obj.name);
+            console.log("obj parent name :", obj.parent.name);
+            console.log("obj wall_type :", obj.wall_type);
+
             // fixed x, z axis
             switch (obj.wall_type) {
                 case "horizon":
-                    target.position.z = obj.position.z;
-                    target.position.x = target.window_position.x;
+                    target.position.z = obj.position.z; //fixed Z axis
+
+                    // move X axis
+                    const minX = -((obj.scale.x/2) - (target.scale.x/2));
+                    const maxX = ((obj.scale.x/2) - (target.scale.x/2));
+                    if (minX < target.position.x && target.position.x < maxX)
+                        target.window_position.x = target.position.x;
+                    else 
+                        target.position.x = (target.position.x > minX) ? maxX : minX;
                     break;
                 case "vertical":
-                    target.position.x = obj.position.x;
-                    target.position.z = target.window_position.z;
+                    target.position.x = obj.position.x; //fixed X axis
+
+                    // move Z axis
+                    const minZ = -((obj.scale.z/2) - (target.scale.x/2));
+                    const maxZ = ((obj.scale.z/2) - (target.scale.x/2));
+                    if (minZ < target.position.z && target.position.z < maxZ)
+                        target.window_position.z = target.position.z;
+                    else 
+                        target.position.z = (target.position.z > minZ) ? maxZ : minZ;
                     break;
                 default:
                     break;
             }
 
-            // move z axis
-            const min = target.window_size.y/2;
-            const max = (obj.scale.y - target.window_size.y/2);
-            if (min < target.position.y && target.position.y < max)
+            // move Y axis
+            const minY = target.window_size.y/2;
+            const maxY = (obj.scale.y - target.window_size.y/2);
+            if (minY < target.position.y && target.position.y < maxY)
                 target.window_position.y = target.position.y;
             else 
-                target.position.y = (target.position.y > min) ? max : min;
+                target.position.y = (target.position.y > minY) ? maxY : minY;
         }
     });
 }
