@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling} from "./_common";
+import { changeFloorColor, changeWallColor, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTexture, resizeWallTextureModeChange} from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
@@ -101,6 +101,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_person_view_mode = false;
         removeCeiling(room);
         set3DMODE(camera, controls, room);
+        resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
         document.getElementById("mode_name").innerHTML = "view";
     });
@@ -110,6 +111,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_person_view_mode = true;
         addCeiling(room);
         setPersonViewMode(viewControls, controls, room);
+        resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
 
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
@@ -172,6 +174,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
 
     document.getElementById("show_ceiling").addEventListener("click", () => {
         addCeiling(room);
+        console.log(target);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
     });
 
@@ -195,6 +198,17 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
 
             addLoadObj(room, item_name, item_path, item_size, item_position, item_id, room.view_mode);
         }, false);
+    }
+
+    // change wall texture
+    const wallTextures = document.getElementsByClassName("Add_wall_texture_btn");
+    for (var i = 0; i < wallTextures.length; i++) {
+        wallTextures[i].addEventListener("click", (e) => {
+            const texture_path = e.target.getAttribute("texture_path");
+            if (target.length !== 0) {
+                changeWallTexture(target[0].object, texture_path);
+            }
+        });
     }
 
     // change floor color

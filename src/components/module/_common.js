@@ -1,4 +1,5 @@
 import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
+import * as THREE from "three"
 
 
 export const removeObject = (scene, target, drag_target) => {
@@ -169,9 +170,11 @@ const resizeWall = (wall, width, height) => {
     switch (wall.wall_type) {
         case "horizon":
             wall.scale.setX(width);
+            resizeWallTexture(wall, wall.wall_type);
             break;
         case "vertical":
             wall.scale.setZ(height);
+            resizeWallTexture(wall, wall.wall_type);
             break;
         default:
             break;
@@ -227,7 +230,16 @@ export const changeFloorColor = (room, color) => {
 }
 
 export const changeWallColor = (wall, color) => {
-    wall.material.color.set(color);
+    if (wall.material.map !== null) {
+        wall.material.dispose();
+        wall.material = new THREE.MeshLambertMaterial({
+            color : color,
+        })
+    }
+    else {
+        wall.material.color.set(color);
+    }
+    
 }
 
 export const hexToRgb = (hex) => {
@@ -306,6 +318,50 @@ export const removeCeiling = (room) => {
                 mesh.geometry.dispose();
             });
             group.parent.remove(group);
+        }
+    });
+}
+
+export const changeWallTexture = (mesh, path) => {
+    if (mesh.name.split("_")[0] !== "wall") return;
+    mesh.material.dispose();
+    const texture = new THREE.TextureLoader().load(path);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    
+    if (mesh.wall_type === "horizon") {
+        texture.repeat.set(mesh.scale.x / 0.39, mesh.scale.y / 0.79);
+    }
+    else {
+        texture.repeat.set(mesh.scale.z / 0.39, mesh.scale.y / 0.79);
+    }
+    mesh.material = new THREE.MeshLambertMaterial({
+        map : texture
+    });
+    console.log(mesh);
+}
+
+export const resizeWallTexture = (wall, wall_type) => {
+    const texture = wall.material.map;
+    if (texture === null) return;
+    switch (wall_type) {
+        case "horizon" :
+            texture.repeat.set(wall.scale.x /( 0.39 * 3), wall.scale.y / (0.79 * 3));
+            break;
+        case "vertical" :
+            texture.repeat.set(wall.scale.z / (0.39 * 3), wall.scale.y / (0.79 * 3));
+            break;
+        default :
+            break;
+    }
+}
+
+export const resizeWallTextureModeChange = (room) => {
+    room.children.forEach((group) => {
+        if(group.name.split("_")[1] == "wall") {
+            group.children.forEach((wall) => {
+                resizeWallTexture(wall, wall.wall_type);
+            });
         }
     });
 }
