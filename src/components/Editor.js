@@ -59,6 +59,9 @@ class Editor extends Component {
 		room.is_person_view_mode = false;
 		room.name = "room";
 		room.size = room_data.room.size;
+		// for debug
+		room.position.set(5, 0, 5);
+		//
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
 			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
@@ -68,7 +71,7 @@ class Editor extends Component {
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
 		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room);
+		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room, light);
 		setInputEvent(room, target);
 
 		const animate = function () {

@@ -138,6 +138,9 @@ export const addCeiling = (room) => {
 
 export const addLight = (light_group, position, intensity) => {
    const light = createLightObject(position, intensity);
+   const lightHelper = new THREE.DirectionalLightHelper(light, 50, 'blue');
+   light.shadow.camera = new THREE.OrthographicCamera(-30, 30, 30, -30, 0.5, 500);
+   light_group.add(lightHelper);
    light_group.add(light);
 }
 

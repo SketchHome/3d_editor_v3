@@ -86,7 +86,7 @@ export const setMouseEvent = (width, height,
 
 };
 
-export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room) => {
+export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room, light) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
@@ -170,6 +170,10 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
 
     document.getElementById("Show_room_info").addEventListener("click", () => {
         console.log(room);
+    });
+
+    document.getElementById("Show_light_info").addEventListener("click", () => {
+        console.log(light);
     });
 
     document.getElementById("show_ceiling").addEventListener("click", () => {
