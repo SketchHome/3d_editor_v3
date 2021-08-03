@@ -49,7 +49,7 @@ class Editor extends Component {
 		const light = new THREE.Group();
 		var ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
 		light.add(ambientLight);
-		addLight(light, {x : 0, y : 30, z : 0}, 0.3);
+		addLight(light, {x : 0, y : 3, z : 0}, 0.3);
 		light.name = 'light_group';
 		scene.add(light);
 
@@ -59,9 +59,6 @@ class Editor extends Component {
 		room.is_person_view_mode = false;
 		room.name = "room";
 		room.size = room_data.room.size;
-		// for debug
-		room.position.set(5, 0, 5);
-		//
 		addRoom(room, room_data.room, 2);
 		room_data.room.item.forEach(item => {
 			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
