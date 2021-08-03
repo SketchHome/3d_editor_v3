@@ -68,10 +68,7 @@ export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) =>
     }, (error) => {
         console.log("An error happened (MTLLoader)");
         console.log(error);
-    });
-
-
-    
+    });    
 };
 
 export const addRoom = (room_group, room, dim) => {
@@ -125,6 +122,12 @@ export const addDoor = (wall_group, id, size, position, wall_type, wall_position
 }
 
 export const addCeiling = (room) => {
+    let ceilingExist = false;
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "ceiling") ceilingExist = true;
+    });
+
+    if(ceilingExist) return;
     const ceiling = createCeilingMesh(room.size);
 
     const group_ceiling = new THREE.Group();
@@ -133,8 +136,8 @@ export const addCeiling = (room) => {
     room.add(group_ceiling);
 }
 
-export const addLight = (light_group, position) => {
-   const light = createLightObject(position);
+export const addLight = (light_group, position, intensity) => {
+   const light = createLightObject(position, intensity);
    light_group.add(light);
 }
 
