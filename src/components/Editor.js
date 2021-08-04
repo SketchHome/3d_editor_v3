@@ -56,15 +56,24 @@ class Editor extends Component {
 		// add something
 		const room = new THREE.Group();
 		room.view_mode = 2;
+		room.is_zoom_mode = true;
+		room.is_edit_mode = false;
+		room.edit_mode = 'None';
 		room.is_person_view_mode = false;
 		room.name = "room";
 		room.size = room_data.room.size;
-		addRoom(room, room_data.room, 2);
-		room_data.room.item.forEach(item => {
-			addLoadObj(room, item.name, item.size, item.position, item.id, 2);
-		});
-		scene.add(room);
+		room_data.room.forEach(_room => {
+			const room_group = new THREE.Group();
+			room_group.name = `group_${_room.id}`;
 
+			addRoom(room_group, _room, 2);
+			_room.item.forEach(item => {
+				addLoadObj(room_group, item.name, item.size, item.position, item.id, 2);
+			});
+			room.add(room_group)
+		})
+		scene.add(room);
+		
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
 		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room);

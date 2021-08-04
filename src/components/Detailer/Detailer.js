@@ -15,8 +15,10 @@ const Detailer = () => {
                 <br />
                 <button id="PersonView_btn" style={{ width: "240px" }}>Person View MODE</button>
                 <br />
-                <button id="EDIT_MODE_btn" style={{ width: "120px" }}>EDIT MODE</button>
-                <button id="ZOOM_MODE_btn" style={{ width: "120px" }}>ZOOM MODE</button>
+                <button id="ROOM_EDIT_MODE_btn" style={{ width: "120px" }}>ROOM EDIT MODE</button>
+                <button id="ITEM_EDIT_MODE_btn" style={{ width: "120px" }}>ITEM EDIT MODE</button>
+                <br />
+                <button id="ZOOM_MODE_btn" style={{ width: "240px" }}>ZOOM MODE</button>
                 <br />
                 <button id="Camera_Info_btn" style={{ width: "240px" }}>Get Camera Info</button>
                 <br />

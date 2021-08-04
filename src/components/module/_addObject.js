@@ -21,7 +21,7 @@ export const addSquare = (scene) => {
     scene.add(cube);
 };
 
-export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) => {
+export const addLoadObj = (room_group, obj_name, obj_path, size, position, id, dim) => {
     const mtl_loader = new MTLLoader();
     const obj_loader = new OBJLoader();
 
@@ -53,7 +53,9 @@ export const addLoadObj = (room, obj_name, obj_path, size, position, id, dim) =>
                     child.castShadow = true;
                     child.receiveShadow = true;
                  });
-                room.add(object);
+                object.room_name = room_group.name;
+                room_group.add(object);
+                
             },
             (xhr) => {
                 console.log("OBJLoader: " + (xhr.loaded / xhr.total * 100) + "% loaded");
@@ -75,8 +77,9 @@ export const addRoom = (room_group, room, dim) => {
     room.wall.forEach(wall => {
         const wall_group = new THREE.Group();
         wall_group.name = `group_${wall.id}`;
+        wall_group.room_name = room_group.name;
 
-        const wall_mesh = createWallMesh(wall.id, wall.type, wall.direction, room.size, dim);
+        const wall_mesh = createWallMesh(wall.id, wall.type, wall.direction, room.size, dim, room.position);
         wall_group.add(wall_mesh);
         wall_group.castShadow = true;
 
@@ -101,13 +104,18 @@ export const addRoom = (room_group, room, dim) => {
         room_group.add(wall_group);
     });
 
-    const floor_mesh = createFloorMesh(room.size);
+    addFloor(room_group, room.size, room.position);
+};
+
+export const addFloor = (room_group, room_size, room_position) => {
+    const floor_mesh = createFloorMesh(room_size, room_position);
     const floor_group = new THREE.Group();
     floor_group.name = "group_floor";
+    floor_group.room_name = room_group.name;
     floor_group.add(floor_mesh);
     
     room_group.add(floor_group);
-};
+}
 
 export const addWindow = (wall_group, id, size, position, wall_type, wall_position, dim) => {
     const window_mesh = createWindowMesh(id ,size, position, wall_type, wall_position, dim);
