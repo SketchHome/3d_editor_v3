@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTexture, resizeWallTextureModeChange} from "./_common";
+import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange} from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
@@ -27,6 +27,8 @@ export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scen
                     break;
                 case "Escape" :
                     viewControls.isLocked = false;
+                    break;
+                default :
                     break;
             }
         }
@@ -86,7 +88,7 @@ export const setMouseEvent = (width, height,
 
 };
 
-export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room) => {
+export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room, light) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
@@ -170,6 +172,10 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
 
     document.getElementById("Show_room_info").addEventListener("click", () => {
         console.log(room);
+    });
+
+    document.getElementById("Show_light_info").addEventListener("click", () => {
+        console.log(light);
     });
 
     document.getElementById("show_ceiling").addEventListener("click", () => {

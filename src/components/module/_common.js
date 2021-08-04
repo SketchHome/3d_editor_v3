@@ -108,6 +108,7 @@ export const resizeRoom = (room, width, height) => {
             case "ceiling":
                 group.children[0].scale.setX(width);
                 group.children[0].scale.setZ(height);
+                break;
             default:
                 break;
         }
@@ -377,7 +378,7 @@ export const resizeWallTexture = (wall, wall_type) => {
 
 export const resizeWallTextureModeChange = (room) => {
     room.children.forEach((group) => {
-        if(group.name.split("_")[1] == "wall") {
+        if(group.name.split("_")[1] === "wall") {
             group.children.forEach((wall) => {
                 resizeWallTexture(wall, wall.wall_type);
             });

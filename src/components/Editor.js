@@ -49,7 +49,7 @@ class Editor extends Component {
 		const light = new THREE.Group();
 		var ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
 		light.add(ambientLight);
-		addLight(light, {x : 0, y : 30, z : 0}, 0.3);
+		addLight(light, {x : 0, y : 3, z : 0}, 0.3);
 		light.name = 'light_group';
 		scene.add(light);
 
@@ -68,7 +68,7 @@ class Editor extends Component {
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
 		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room);
+		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room, light);
 		setInputEvent(room, target);
 
 		const animate = function () {
