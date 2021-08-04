@@ -65,27 +65,32 @@ export const setMouseEvent = (width, height,
     // normal click event - set target 		
     window.addEventListener("mousedown", (event) => {
         if (event.target.tagName !== "CANVAS") return;
+        if (room.is_edit_mode !== true) return;
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
-        setTarget(intersects, target, drag_target);
+        setTarget(intersects, target, drag_target, room.edit_mode, room);
     }, false);
 
     // special click event - set drag target 		
     window.addEventListener("contextmenu", (event) => {
         event.preventDefault();
         if (event.target.tagName !== "CANVAS") return;
+        if (room.is_edit_mode !== true) return;
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
-        setDragTarget(intersects, target, drag_target);
+        setDragTarget(intersects, target, drag_target, room.edit_mode);
     }, false);
 
     // let current_postion;
-    dragControls.addEventListener("dragstart", (event) => {
+    dragControls.addEventListener("dragstart", () => {
         console.log("drag start");
+        room.children.forEach(r => {
+            console.log(r)
+        })
         dragControls.enabled = true;
         // current_postion = event.object.position;
     });
@@ -99,7 +104,7 @@ export const setMouseEvent = (width, height,
         relocateDragTarget(event.object, room.view_mode);
     });
 
-    dragControls.addEventListener("dragend", (event) => {
+    dragControls.addEventListener("dragend", () => {
         console.log("drag end");
         dragControls.enabled = false;
     });
@@ -110,6 +115,8 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 2;
         room.is_person_view_mode = false;
+        room.is_edit_mode = false;
+        room.is_zoom_mode = true;
         if (room.children.length > 0)
             room.children.forEach(_room => set2DMODE(camera, controls, _room));
         document.getElementById("mode_name").innerHTML = "view";
@@ -118,6 +125,8 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = false;
+        room.is_edit_mode = false;
+        room.is_zoom_mode = true;
         if (room.children.length > 0)
             room.children.forEach(_room => set3DMODE(camera, controls, _room));
         document.getElementById("mode_name").innerHTML = "view";
@@ -126,17 +135,34 @@ export const setButtonEvent = (camera, controls, scene, target, drag_target, roo
     document.getElementById("PersonView_btn").addEventListener("click", () => {
         room.view_mode = 3;
         room.is_person_view_mode = true;
+        room.is_edit_mode = false;
+        room.is_zoom_mode = false;
         if (room.children.length > 0)
             room.children.forEach(_room => setPersonViewMode(camera, controls, _room));
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
-    document.getElementById("EDIT_MODE_btn").addEventListener("click", () => {
+    document.getElementById("ROOM_EDIT_MODE_btn").addEventListener("click", () => {
+        room.is_person_view_mode = false;
+        room.edit_mode = 'room';
+        room.is_edit_mode = true;
+        room.is_zoom_mode = false;
         setDragMode(controls);
-        document.getElementById("mode_name").innerHTML = "edit";
+        document.getElementById("mode_name").innerHTML = "room edit";
     });
 
+    document.getElementById("ITEM_EDIT_MODE_btn").addEventListener("click", () => {
+        room.is_person_view_mode = false;
+        room.edit_mode = 'item';
+        room.is_edit_mode = true;
+        room.is_zoom_mode = false;
+        setDragMode(controls);
+        document.getElementById("mode_name").innerHTML = "item edit";
+    });
+
+
     document.getElementById("ZOOM_MODE_btn").addEventListener("click", () => {
+        room.is_person_view_mode = false;
         setZoomMode(controls, room.view_mode);
         document.getElementById("mode_name").innerHTML = "view";
     });

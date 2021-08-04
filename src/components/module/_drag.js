@@ -1,8 +1,20 @@
-export const setDragTarget = (intersects, target, drag_target) => {
+export const setDragTarget = (intersects, target, drag_target, edit_mode) => {
     if (intersects.length === 0 || target.length === 0) return;
-
-    if (drag_target.length === 0 && target[0].object.uuid === intersects[0].object.uuid) {
-        addDragTarget(drag_target, intersects[0].object);
+    switch (edit_mode) {
+        case 'room':
+            if (intersects[0].object.name !== 'floor') return;
+            const temp_target = intersects[0].object.parent.parent;
+            if (drag_target.length === 0 && target[0].object.name === temp_target.name) {
+                addDragRoomTarget(drag_target, temp_target);
+            }
+            break
+        case 'item':
+            if (drag_target.length === 0 && target[0].object.uuid === intersects[0].object.uuid) {
+                addDragItemTarget(drag_target, intersects[0].object);
+            }
+            break
+        default:
+            break
     }
 };
 
@@ -10,15 +22,18 @@ export const removeDragTarget = (target) => {
     target.pop();
 };
 
-const addDragTarget = (drag_target, object) => {
+const addDragRoomTarget = (drag_target, object) => {
+    drag_target.push(object);
+    document.getElementById("target_name").innerHTML = object.name + " (drag)";
+}
+
+const addDragItemTarget = (drag_target, object) => {
     switch (object.name.split("_")[0]) {
         case "window":
             drag_target.push(object);
-            object.material.color.set("blue");
             break;
         case "door":
             drag_target.push(object);
-            object.material.color.set("blue");
             break;
         case "load":
             drag_target.push(object.parent);
@@ -43,6 +58,9 @@ export const relocateDragTarget = (target, view_mode) => {
         else if (target.name.split("_")[0] === "door") {
             relocateDoor_2D(target);
         }
+        else if (target.name.split("_")[1] === "room") {
+            relocateRoom_2D(target)
+        }
     }
     else if (view_mode === 3) {
         if (target.name === "group_item") {
@@ -54,6 +72,10 @@ export const relocateDragTarget = (target, view_mode) => {
             relocateWindow_3D(target);
         }
     }
+}
+
+const relocateRoom_2D = (target) => {
+
 }
 
 const relocateWindow_2D = (target) => {

@@ -54,12 +54,15 @@ class Editor extends Component {
 		// add something
 		const room = new THREE.Group();
 		room.view_mode = 2;
+		room.is_zoom_mode = true;
+		room.is_edit_mode = false;
+		room.edit_mode = 'None';
 		room.is_person_view_mode = false;
 		room.name = "room";
 
 		room_data.room.forEach(_room => {
 			const room_group = new THREE.Group();
-			room_group.name = `group_room_${_room.id}`;
+			room_group.name = `group_${_room.id}`;
 
 			addRoom(room_group, _room, 2);
 			_room.item.forEach(item => {
@@ -68,8 +71,6 @@ class Editor extends Component {
 			room.add(room_group)
 		})
 		scene.add(room);
-
-		console.log(scene)
 
 		// set event
 		setKeyboardEvent(controls, camera, room);
