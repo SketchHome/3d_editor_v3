@@ -95,7 +95,9 @@ export const setMouseEvent = (width, height,
 
 export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room, light) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
-        removeCeiling(room);
+        room.children.forEach((room_group) => {
+            removeCeiling(room_group);
+        })
         set2DMODE(camera, controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
@@ -109,7 +111,9 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
-        removeCeiling(room);
+        room.children.forEach((room_group) => {
+            removeCeiling(room_group);
+        })
         set3DMODE(camera, controls, room);
         resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
@@ -124,7 +128,9 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
-        //addCeiling(room);
+        room.children.forEach((room_group) => {
+            addCeiling(room_group);
+        });
         setPersonViewMode(viewControls, controls, room);
         resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
@@ -216,13 +222,16 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     });
 
     document.getElementById("show_ceiling").addEventListener("click", () => {
-        addCeiling(room);
-        console.log(target);
+        room.children.forEach((room_group) => {
+            addCeiling(room_group);
+        });
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
     });
 
     document.getElementById("hide_ceiling").addEventListener("click", () => {
-        removeCeiling(room);
+        room.children.forEach((room_group) => {
+            removeCeiling(room_group);
+        })
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
     });
 
@@ -337,6 +346,7 @@ export const setInputEvent = (room, target) => {
         const height = parseFloat(document.getElementById("resize_height").value);
 
         if (isNaN(width) || isNaN(height)) return;
+        if (target.length === 0) return;
         resizeRoom(target[0].object, width, height);
     });
 
@@ -345,6 +355,7 @@ export const setInputEvent = (room, target) => {
         const height = parseFloat(document.getElementById("resize_height").value);
 
         if (isNaN(width) || isNaN(height)) return;
+        if (target.length === 0) return;
         resizeRoom(target[0].object, width, height);
     });
 
