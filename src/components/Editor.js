@@ -61,11 +61,11 @@ class Editor extends Component {
 		room.edit_mode = 'None';
 		room.is_person_view_mode = false;
 		room.name = "room";
-		room.size = room_data.room.size;
 		room_data.room.forEach(_room => {
 			const room_group = new THREE.Group();
 			room_group.name = `group_${_room.id}`;
-
+			room_group.size = _room.size;
+			room_group.position.set(_room.position.x, _room.position.y, _room.position.z);
 			addRoom(room_group, _room, 2);
 			_room.item.forEach(item => {
 				addLoadObj(room_group, item.name, item.size, item.position, item.id, 2);

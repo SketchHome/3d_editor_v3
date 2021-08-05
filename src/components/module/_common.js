@@ -79,6 +79,15 @@ const getItemPosition = (mesh, direction) => {
 }
 
 export const resizeRoom = (room, width, height) => {
+
+    switch (room.parent.edit_mode) {
+        case "room" :
+            break;
+        case "item" :
+        default :
+            return;
+    }
+
     room.children.forEach(group => {
         switch (group.name.split("_")[1]) {
             case "wall":
@@ -86,7 +95,7 @@ export const resizeRoom = (room, width, height) => {
                     switch (mesh.name.split("_")[0]) {
                         case "wall":
                             resizeWall(mesh, width, height);
-                            relocateWall(mesh, width, height);
+                            relocateWall(mesh, width, height, room.position);
                             break;
                         case "window":
                         case "door":
@@ -169,7 +178,7 @@ const limitWallSize = (wall) => {
 
 const resizeWall = (wall, width, height) => {
     
-    limitWallSize(wall);
+    //limitWallSize(wall);
 
     switch (wall.wall_type) {
         case "horizon":
@@ -185,19 +194,20 @@ const resizeWall = (wall, width, height) => {
     }
 }
 
-const relocateWall = (wall, width, height) => {
+const relocateWall = (wall, width, height, room_position) => {
+
     switch (wall.wall_direction) {
         case "top":
-            wall.position.setZ(height / 2);
+            wall.position.setZ(room_position.z + height / 2);
             break;
         case "bottom":
-            wall.position.setZ(-height / 2);
+            wall.position.setZ(room_position.z - height / 2);
             break;
         case "right":
-            wall.position.setX(width / 2);
+            wall.position.setX(room_position.x + width / 2);
             break;
         case "left":
-            wall.position.setX(-width / 2);
+            wall.position.setX(room_position.x - width / 2);
             break;
         default:
             break;

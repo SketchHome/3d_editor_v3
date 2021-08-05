@@ -124,7 +124,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
-        addCeiling(room);
+        //addCeiling(room);
         setPersonViewMode(viewControls, controls, room);
         resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
@@ -206,6 +206,9 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
 
     document.getElementById("Show_room_info").addEventListener("click", () => {
         console.log(room);
+        room.children.forEach((room_group) => {
+            console.log(room_group);
+        })
     });
 
     document.getElementById("Show_light_info").addEventListener("click", () => {
@@ -334,7 +337,7 @@ export const setInputEvent = (room, target) => {
         const height = parseFloat(document.getElementById("resize_height").value);
 
         if (isNaN(width) || isNaN(height)) return;
-        resizeRoom(room, width, height);
+        resizeRoom(target[0].object, width, height);
     });
 
     document.getElementById("resize_height").addEventListener("input", () => {
@@ -342,7 +345,7 @@ export const setInputEvent = (room, target) => {
         const height = parseFloat(document.getElementById("resize_height").value);
 
         if (isNaN(width) || isNaN(height)) return;
-        resizeRoom(room, width, height);
+        resizeRoom(target[0].object, width, height);
     });
 
     document.getElementById("resize_item").addEventListener("input", () => {
