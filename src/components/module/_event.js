@@ -125,7 +125,6 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
         addCeiling(room);
-        setPersonViewMode(viewControls, controls, room);
         resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
         
@@ -134,6 +133,8 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_edit_mode = false;
         room.is_zoom_mode = false;
 
+        if(room.children.length > 0)
+            room.children.forEach(_room => setPersonViewMode(viewControls, controls, _room));
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
