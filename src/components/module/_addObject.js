@@ -136,7 +136,7 @@ export const addCeiling = (room) => {
     });
 
     if(ceilingExist) return;
-    const ceiling = createCeilingMesh(room.size, room.position);
+    const ceiling = createCeilingMesh(room.size, room.room_position);
 
     const group_ceiling = new THREE.Group();
     group_ceiling.name = "group_ceiling";

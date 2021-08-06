@@ -53,6 +53,11 @@ class Editor extends Component {
 		light.name = 'light_group';
 		scene.add(light);
 
+		// grid helper
+		//const helper = new THREE.GridHelper(1000, 1000);
+		//scene.add(helper);
+
+
 		// add something
 		const room = new THREE.Group();
 		room.view_mode = 2;
@@ -65,7 +70,7 @@ class Editor extends Component {
 			const room_group = new THREE.Group();
 			room_group.name = `group_${_room.id}`;
 			room_group.size = _room.size;
-			room_group.position.set(_room.position.x, _room.position.y, _room.position.z);
+			room_group.room_position = _room.position;
 			addRoom(room_group, _room, 2);
 			_room.item.forEach(item => {
 				addLoadObj(room_group, item.name, item.size, item.position, item.id, 2);

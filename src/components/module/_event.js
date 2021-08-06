@@ -95,9 +95,6 @@ export const setMouseEvent = (width, height,
 
 export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room, light) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
-        room.children.forEach((room_group) => {
-            removeCeiling(room_group);
-        })
         set2DMODE(camera, controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
@@ -106,16 +103,16 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_edit_mode = false;
         room.is_zoom_mode = true;
         if (room.children.length > 0)
-            room.children.forEach(_room => set2DMODE(camera, controls, _room));
+            room.children.forEach(_room => {
+                set2DMODE(camera, controls, _room)
+                removeCeiling(_room);
+            });
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {
-        room.children.forEach((room_group) => {
-            removeCeiling(room_group);
-        })
         set3DMODE(camera, controls, room);
-        resizeWallTextureModeChange(room);
+        
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
         room.view_mode = 3;
@@ -123,16 +120,17 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_edit_mode = false;
         room.is_zoom_mode = true;
         if (room.children.length > 0)
-            room.children.forEach(_room => set3DMODE(camera, controls, _room));
+            room.children.forEach(_room => {
+                set3DMODE(camera, controls, _room)
+                removeCeiling(_room);
+                resizeWallTextureModeChange(_room);
+            });
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
-        room.children.forEach((room_group) => {
-            addCeiling(room_group);
-        });
         setPersonViewMode(viewControls, controls, room);
-        resizeWallTextureModeChange(room);
+        set3DMODE(camera, controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
         
         room.view_mode = 3;
@@ -140,7 +138,11 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_edit_mode = false;
         room.is_zoom_mode = false;
         if (room.children.length > 0)
-            room.children.forEach(_room => setPersonViewMode(camera, controls, _room));
+            room.children.forEach(_room => {
+                set3DMODE(camera, controls, _room);
+                addCeiling(_room);
+                resizeWallTextureModeChange(_room);
+            });
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
