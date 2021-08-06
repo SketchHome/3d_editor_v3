@@ -141,7 +141,7 @@ export const resizeItem = (item, size) => {
     if (item.parent.scale.y !== 0.0001) item.parent.scale.setY(real_size);
 }
 
-const limitWallSize = (wall) => {
+const limitWallSize = (wall, room_position) => {
     let minValue = [];
     if(wall.parent.children.length < 2) return;
 
@@ -163,13 +163,14 @@ const limitWallSize = (wall) => {
     if (minValue.length === 0) return;
 
     minValue.sort().reverse();
+    console.log(minValue);
 
     switch (wall.wall_type) {
         case "horizon":
-            document.getElementById('resize_width').setAttribute('min', minValue[0]);
+            document.getElementById('resize_width').setAttribute('min', minValue[0] - room_position.x);
             break;
         case "vertical":
-            document.getElementById('resize_height').setAttribute('min', minValue[0]);
+            document.getElementById('resize_height').setAttribute('min', minValue[0] - room_position.z);
             break;
         default :
             break;
@@ -180,7 +181,7 @@ const limitWallSize = (wall) => {
 
 const resizeWall = (wall, width, height) => {
     
-    //limitWallSize(wall);
+    //limitWallSize(wall, wall.parent.parent.room_position);
 
     switch (wall.wall_type) {
         case "horizon":
