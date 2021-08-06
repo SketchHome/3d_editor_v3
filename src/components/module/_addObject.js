@@ -136,7 +136,7 @@ export const addCeiling = (room) => {
     });
 
     if(ceilingExist) return;
-    const ceiling = createCeilingMesh(room.size);
+    const ceiling = createCeilingMesh(room.size, room.room_position);
 
     const group_ceiling = new THREE.Group();
     group_ceiling.name = "group_ceiling";
@@ -147,8 +147,8 @@ export const addCeiling = (room) => {
 export const addLight = (light_group, position, intensity) => {
    const light = createLightObject(position, intensity);
    light.shadow.camera = new THREE.OrthographicCamera(-80, 80, 80, -80, 0.5, 500);
-   light.shadow.mapSize.width = 1024 * 10;
-   light.shadow.mapSize.height = 1024 * 10;
+   light.shadow.mapSize.width = 1024 * 4;
+   light.shadow.mapSize.height = 1024 * 4;
    light_group.add(light);
 }
 

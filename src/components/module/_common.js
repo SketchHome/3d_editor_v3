@@ -79,6 +79,15 @@ const getItemPosition = (mesh, direction) => {
 }
 
 export const resizeRoom = (room, width, height) => {
+
+    switch (room.parent.edit_mode) {
+        case "room" :
+            break;
+        case "item" :
+        default :
+            return;
+    }
+
     room.children.forEach(group => {
         switch (group.name.split("_")[1]) {
             case "wall":
@@ -86,7 +95,7 @@ export const resizeRoom = (room, width, height) => {
                     switch (mesh.name.split("_")[0]) {
                         case "wall":
                             resizeWall(mesh, width, height);
-                            relocateWall(mesh, width, height);
+                            relocateWall(mesh, width, height, room.room_position);
                             break;
                         case "window":
                         case "door":
@@ -151,6 +160,8 @@ const limitWallSize = (wall) => {
         }
     });
 
+    if (minValue.length === 0) return;
+
     minValue.sort().reverse();
 
     switch (wall.wall_type) {
@@ -169,7 +180,7 @@ const limitWallSize = (wall) => {
 
 const resizeWall = (wall, width, height) => {
     
-    limitWallSize(wall);
+    //limitWallSize(wall);
 
     switch (wall.wall_type) {
         case "horizon":
@@ -185,19 +196,20 @@ const resizeWall = (wall, width, height) => {
     }
 }
 
-const relocateWall = (wall, width, height) => {
+const relocateWall = (wall, width, height, position) => {
+
     switch (wall.wall_direction) {
         case "top":
-            wall.position.setZ(height / 2);
+            wall.position.setZ(position.z + height / 2);
             break;
         case "bottom":
-            wall.position.setZ(-height / 2);
+            wall.position.setZ(position.z - height / 2);
             break;
         case "right":
-            wall.position.setX(width / 2);
+            wall.position.setX(position.z + width / 2);
             break;
         case "left":
-            wall.position.setX(-width / 2);
+            wall.position.setX(position.z - width / 2);
             break;
         default:
             break;
@@ -358,7 +370,6 @@ export const changeWallTexture = (mesh, path) => {
     mesh.material = new THREE.MeshLambertMaterial({
         map : texture
     });
-    console.log(mesh);
 }
 
 export const resizeWallTexture = (wall, wall_type) => {
@@ -366,10 +377,10 @@ export const resizeWallTexture = (wall, wall_type) => {
     if (texture === null) return;
     switch (wall_type) {
         case "horizon" :
-            texture.repeat.set(wall.scale.x /( 0.39 * 3), wall.scale.y / (0.79 * 3));
+            texture.repeat.set(wall.scale.x / 0.39, wall.scale.y / 0.79);
             break;
         case "vertical" :
-            texture.repeat.set(wall.scale.z / (0.39 * 3), wall.scale.y / (0.79 * 3));
+            texture.repeat.set(wall.scale.z / 0.39, wall.scale.y / 0.79);
             break;
         default :
             break;
