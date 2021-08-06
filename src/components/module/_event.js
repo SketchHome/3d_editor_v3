@@ -110,9 +110,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         document.getElementById("mode_name").innerHTML = "view";
     });
 
-    document.getElementById("3D_MODE_btn").addEventListener("click", () => {
-        set3DMODE(camera, controls, room);
-        
+    document.getElementById("3D_MODE_btn").addEventListener("click", () => {        
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
         room.view_mode = 3;
@@ -139,7 +137,6 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         if (room.children.length > 0)
             room.children.forEach(_room => {
                 setPersonViewMode(viewControls, controls, _room);
-                set3DMODE(camera, controls, _room);
                 addCeiling(_room);
                 resizeWallTextureModeChange(_room);
             });
