@@ -129,20 +129,21 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
-        setPersonViewMode(viewControls, controls, room);
-        set3DMODE(camera, controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
         
         room.view_mode = 3;
         room.is_person_view_mode = true;
         room.is_edit_mode = false;
         room.is_zoom_mode = false;
+
         if (room.children.length > 0)
             room.children.forEach(_room => {
+                setPersonViewMode(viewControls, controls, _room);
                 set3DMODE(camera, controls, _room);
                 addCeiling(_room);
                 resizeWallTextureModeChange(_room);
             });
+      
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
