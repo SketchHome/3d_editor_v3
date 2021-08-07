@@ -200,7 +200,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
                     "id": "room_3312",
                     "type": "square",
                     "position": {"x": 0, "y": 0, "z": 0},
-                    "size": {"x": 11, "y": 3, "z": 7},
+                    "size": {"x": 5, "y": 3, "z": 5},
                     "wall": default_wall.map((info, i) => {return {"id": `wall_${i}`, "type": info[1], "direction": info[0], "door":[], "window": []}}),
                     "item": []
                 }
