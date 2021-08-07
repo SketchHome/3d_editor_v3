@@ -76,6 +76,8 @@ export const addLoadObj = (room_group, obj_name, obj_path, size, position, id, d
 export const addRoom = (show_room, room_info, dim) => {
     const room_group = new THREE.Group();
 	room_group.name = `group_${room_info.id}`;
+	room_group.room_size = room_info.size;
+	room_group.room_position = room_info.position;
 
     // add walls (window, door)
     room_info.wall.forEach(wall => {

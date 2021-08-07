@@ -1,8 +1,9 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange} from "./_common";
+import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange } from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow, addRoom } from "./_addObject"
+import { saveStatus } from "./_save"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
@@ -70,9 +71,6 @@ export const setMouseEvent = (width, height,
     // let current_postion;
     dragControls.addEventListener("dragstart", () => {
         console.log("drag start");
-        room.children.forEach(r => {
-            console.log(r)
-        })
         dragControls.enabled = true;
         // current_postion = event.object.position;
     });
@@ -87,6 +85,13 @@ export const setMouseEvent = (width, height,
     });
 
     dragControls.addEventListener("dragend", () => {
+        if (room.edit_mode === 'room') {
+            drag_target[0].room_position = {
+                'x': drag_target[0].position.x,
+                'y': drag_target[0].position.y,
+                'z': drag_target[0].position.z
+            };
+        }
         console.log("drag end");
         dragControls.enabled = false;
     });
@@ -224,6 +229,10 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         const window_size = { "x": 2, "y": 2, "z": 0.3 };
         const window_position = { "x": 0, "y": 1.7 };
         addWindow(wall.parent, window_id, window_size, window_position, wall.wall_type, wall.position, room.view_mode);
+    });
+
+    document.getElementById("SAVE_btn").addEventListener("click", () => {
+        saveStatus(room);
     });
 
     document.getElementById("Show_room_info").addEventListener("click", () => {

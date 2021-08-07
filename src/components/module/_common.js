@@ -237,6 +237,7 @@ const relocateObject = (object) => {
     });
 }
 
+
 export const changeFloorTexture = (floor, item_path) => {
     const texture = new THREE.TextureLoader().load(item_path);
     texture.wrapS = THREE.RepeatWrapping;
