@@ -31,9 +31,6 @@ class Editor extends Component {
 		camera.position.y = 10;
 		this.mount.appendChild(renderer.domElement);
 
-		//var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
-		//scene.add( ambientLight );
-
 		let target = [];
 		let drag_target = [];
 		const controls = new OrbitControls(camera, renderer.domElement);
@@ -64,7 +61,7 @@ class Editor extends Component {
 		room.size = room_data.room.size;
 		room_data.room.forEach(room_info => {
 			addRoom(room, room_info, 2);
-			
+
 		})
 		scene.add(room);
 		
