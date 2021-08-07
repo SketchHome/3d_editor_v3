@@ -267,13 +267,17 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     const elements = document.getElementsByClassName("Add_item_btn");
     for (var i = 0; i < elements.length; i++) {
         elements[i].addEventListener("click", (e) => {
-            const item_name = e.target.getAttribute("item_name");
-            const item_path = e.target.getAttribute("item_path") + "/";
-            const item_size = item_size_info["sofa"];
-            const item_position = { "x": 0, "y": 0, "z": 0 };
-            const item_id = "item";
+            if (room.edit_mode === 'room' && target.length !== 0) {
+                
+                const item_name = e.target.getAttribute("item_name");
+                const item_path = e.target.getAttribute("item_path") + "/";
+                const item_size = item_size_info["sofa"];
+                const item_position = target[0].object.room_position;
+                const item_id = "item";
 
-            addLoadObj(room, item_name, item_path, item_size, item_position, item_id, room.view_mode);
+                addLoadObj(target[0].object, item_name, item_path, item_size, item_position, item_id, room.view_mode);
+            }
+            
         }, false);
     }
   
