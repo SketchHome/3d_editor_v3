@@ -92,7 +92,6 @@ export const setMouseEvent = (width, height,
                 'z': drag_target[0].position.z
             };
         }
-        console.log(drag_target[0])
         console.log("drag end");
         dragControls.enabled = false;
     });
