@@ -23,6 +23,8 @@ const Detailer = () => {
                 <button id="Camera_Info_btn" style={{ width: "240px" }}>Get Camera Info</button>
                 <br />
                 <button id="Export_btn" style={{ width: "240px" }}>Export</button>
+                <br />
+                <button id="Add_Room_btn" style={{ width: "240px" }}>Add Room</button>
             </div>
             <br />
             <div>
