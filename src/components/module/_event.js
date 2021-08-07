@@ -2,7 +2,7 @@ import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
 import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange} from "./_common";
-import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
+import { addCeiling, addDoor, addLoadObj, addWindow, addRoom } from "./_addObject"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
@@ -180,6 +180,22 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         if (target.length === 0) return;
 
         rotateObjectVertical(target);
+    });
+
+    document.getElementById("Add_Room_btn").addEventListener("click", () => {
+        if (room.is_edit_mode) {
+            const default_wall = [['top', 'horizon'], ['bottom', 'horizon'], ["right", 'vertical'], ["left", 'vertical']];
+            const default_room = {
+                    "id": "room_3312",
+                    "type": "square",
+                    "position": {"x": 0, "y": 0, "z": 0},
+                    "size": {"x": 11, "y": 3, "z": 7},
+                    "wall": default_wall.map((info, i) => {return {"id": `wall_${i}`, "type": info[1], "direction": info[0], "door":[], "window": []}}),
+                    "item": []
+                }
+
+			addRoom(room, default_room, room.view_mode);
+        }
     });
 
     document.getElementById("Add_door_btn").addEventListener("click", () => {
