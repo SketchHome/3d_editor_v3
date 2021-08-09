@@ -18,16 +18,18 @@ export const set2DMODE = (camera, mapControls, controls, room) => {
 
 export const set3DMODE = (camera, mapControls, controls, room) => {
     mapControls.enabled = false;
-    //camera.position.set(5, 10, 5);
-    camera.lookAt(0, 0, 0);
-    controls.target.set(0, 0, 0);
+    camera.lookAt(camera.position.x, 0, camera.position.z);
+    camera.position.setY(10);
+    controls.target.set(camera.position.x, 0, camera.position.z);
     controls.update();
     setZoomMode(controls, 3);
     setObjectDim(room, 3);
     controls.update();
 };
 
-export const setPersonViewMode = (viewControls, controls, room) => {
+export const setPersonViewMode = (viewControls, mapControls, controls, room) => {
+    mapControls.enabled = false;
+
     setZoomMode(controls, 3);
     controls.enableRotate = false;
     controls.enableZoom = false;

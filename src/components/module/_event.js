@@ -141,7 +141,7 @@ export const setButtonEvent = (camera, viewControls, mapControls, controls,  sce
 
         if (room.children.length > 0)
             room.children.forEach(_room => {
-                setPersonViewMode(viewControls, controls, _room);
+                setPersonViewMode(viewControls, mapControls, controls, _room);
                 addCeiling(_room);
                 resizeWallTextureModeChange(_room);
             });
