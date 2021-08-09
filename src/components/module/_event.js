@@ -98,9 +98,9 @@ export const setMouseEvent = (width, height,
 
 };
 
-export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room, light) => {
+export const setButtonEvent = (camera, viewControls, mapControls, controls,  scene, target, drag_target, room, light) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
-        set2DMODE(camera, controls, room);
+        set2DMODE(camera, mapControls ,controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
         room.view_mode = 2;
@@ -109,7 +109,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_zoom_mode = true;
         if (room.children.length > 0)
             room.children.forEach(_room => {
-                set2DMODE(camera, controls, _room)
+                set2DMODE(camera, mapControls, controls, _room)
                 removeCeiling(_room);
             });
         document.getElementById("mode_name").innerHTML = "view";
@@ -124,7 +124,7 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_zoom_mode = true;
         if (room.children.length > 0)
             room.children.forEach(_room => {
-                set3DMODE(camera, controls, _room)
+                set3DMODE(camera, mapControls, controls, _room)
                 removeCeiling(_room);
                 resizeWallTextureModeChange(_room);
             });

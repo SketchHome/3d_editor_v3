@@ -1,8 +1,11 @@
 import { setObjectDim } from "./_dim";
 
-export const set2DMODE = (camera, controls, room) => {
+export const set2DMODE = (camera, mapControls, controls, room) => {
+    mapControls.enabled = true;
+    mapControls.target.set(0, 0, 0);
     camera.position.set(0, 10, 0);
     camera.lookAt(0, 0, 0);
+    console.log(camera);
     controls.target.set(0, 0, 0);
     setZoomMode(controls, 2);
     setObjectDim(room, 2)
@@ -13,8 +16,9 @@ export const set2DMODE = (camera, controls, room) => {
     controls.update();
 };
 
-export const set3DMODE = (camera, controls, room) => {
-    camera.position.set(5, 10, 5);
+export const set3DMODE = (camera, mapControls, controls, room) => {
+    mapControls.enabled = false;
+    //camera.position.set(5, 10, 5);
     camera.lookAt(0, 0, 0);
     controls.target.set(0, 0, 0);
     controls.update();
