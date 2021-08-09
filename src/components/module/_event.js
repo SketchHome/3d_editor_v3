@@ -1,8 +1,9 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange} from "./_common";
-import { addCeiling, addDoor, addLoadObj, addWindow } from "./_addObject"
+import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange } from "./_common";
+import { addCeiling, addDoor, addLoadObj, addWindow, addRoom } from "./_addObject"
+import { saveStatus } from "./_save"
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
@@ -70,9 +71,6 @@ export const setMouseEvent = (width, height,
     // let current_postion;
     dragControls.addEventListener("dragstart", () => {
         console.log("drag start");
-        room.children.forEach(r => {
-            console.log(r)
-        })
         dragControls.enabled = true;
         // current_postion = event.object.position;
     });
@@ -87,6 +85,13 @@ export const setMouseEvent = (width, height,
     });
 
     dragControls.addEventListener("dragend", () => {
+        if (room.edit_mode === 'room') {
+            drag_target[0].room_position = {
+                'x': drag_target[0].position.x,
+                'y': drag_target[0].position.y,
+                'z': drag_target[0].position.z
+            };
+        }
         console.log("drag end");
         dragControls.enabled = false;
     });
@@ -95,7 +100,6 @@ export const setMouseEvent = (width, height,
 
 export const setButtonEvent = (camera, viewControls, controls, scene, target, drag_target, room, light) => {
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
-        removeCeiling(room);
         set2DMODE(camera, controls, room);
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
@@ -104,14 +108,14 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_edit_mode = false;
         room.is_zoom_mode = true;
         if (room.children.length > 0)
-            room.children.forEach(_room => set2DMODE(camera, controls, _room));
+            room.children.forEach(_room => {
+                set2DMODE(camera, controls, _room)
+                removeCeiling(_room);
+            });
         document.getElementById("mode_name").innerHTML = "view";
     });
 
-    document.getElementById("3D_MODE_btn").addEventListener("click", () => {
-        removeCeiling(room);
-        set3DMODE(camera, controls, room);
-        resizeWallTextureModeChange(room);
+    document.getElementById("3D_MODE_btn").addEventListener("click", () => {        
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
 
         room.view_mode = 3;
@@ -119,13 +123,15 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_edit_mode = false;
         room.is_zoom_mode = true;
         if (room.children.length > 0)
-            room.children.forEach(_room => set3DMODE(camera, controls, _room));
+            room.children.forEach(_room => {
+                set3DMODE(camera, controls, _room)
+                removeCeiling(_room);
+                resizeWallTextureModeChange(_room);
+            });
         document.getElementById("mode_name").innerHTML = "view";
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
-        addCeiling(room);
-        resizeWallTextureModeChange(room);
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
         
         room.view_mode = 3;
@@ -134,8 +140,12 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         room.is_zoom_mode = false;
 
         if (room.children.length > 0)
-            room.children.forEach(_room => setPersonViewMode(viewControls, controls, _room));
-
+            room.children.forEach(_room => {
+                setPersonViewMode(viewControls, controls, _room);
+                addCeiling(_room);
+                resizeWallTextureModeChange(_room);
+            });
+      
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
     })
 
@@ -183,6 +193,22 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         rotateObjectVertical(target);
     });
 
+    document.getElementById("Add_Room_btn").addEventListener("click", () => {
+        if (room.is_edit_mode) {
+            const default_wall = [['top', 'horizon'], ['bottom', 'horizon'], ["right", 'vertical'], ["left", 'vertical']];
+            const default_room = {
+                    "id": "room_3312",
+                    "type": "square",
+                    "position": {"x": 0, "y": 0, "z": 0},
+                    "size": {"x": 5, "y": 3, "z": 5},
+                    "wall": default_wall.map((info, i) => {return {"id": `wall_${i}`, "type": info[1], "direction": info[0], "door":[], "window": []}}),
+                    "item": []
+                }
+
+			addRoom(room, default_room, room.view_mode);
+        }
+    });
+
     document.getElementById("Add_door_btn").addEventListener("click", () => {
         if (target.length === 0) return;
         if (target[0].object.name.split("_")[0] !== "wall") return;
@@ -205,8 +231,15 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
         addWindow(wall.parent, window_id, window_size, window_position, wall.wall_type, wall.position, room.view_mode);
     });
 
+    document.getElementById("SAVE_btn").addEventListener("click", () => {
+        saveStatus(room);
+    });
+
     document.getElementById("Show_room_info").addEventListener("click", () => {
         console.log(room);
+        room.children.forEach((room_group) => {
+            console.log(room_group);
+        })
     });
 
     document.getElementById("Show_light_info").addEventListener("click", () => {
@@ -214,13 +247,16 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     });
 
     document.getElementById("show_ceiling").addEventListener("click", () => {
-        addCeiling(room);
-        console.log(target);
+        room.children.forEach((room_group) => {
+            addCeiling(room_group);
+        });
         document.getElementById("ceiling_visibility").innerHTML = "Visible";
     });
 
     document.getElementById("hide_ceiling").addEventListener("click", () => {
-        removeCeiling(room);
+        room.children.forEach((room_group) => {
+            removeCeiling(room_group);
+        })
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
     });
 
@@ -231,13 +267,17 @@ export const setButtonEvent = (camera, viewControls, controls, scene, target, dr
     const elements = document.getElementsByClassName("Add_item_btn");
     for (var i = 0; i < elements.length; i++) {
         elements[i].addEventListener("click", (e) => {
-            const item_name = e.target.getAttribute("item_name");
-            const item_path = e.target.getAttribute("item_path") + "/";
-            const item_size = item_size_info["sofa"];
-            const item_position = { "x": 0, "y": 0, "z": 0 };
-            const item_id = "item";
+            if (room.edit_mode === 'room' && target.length !== 0) {
+                
+                const item_name = e.target.getAttribute("item_name");
+                const item_path = e.target.getAttribute("item_path") + "/";
+                const item_size = item_size_info["sofa"];
+                const item_position = target[0].object.room_position;
+                const item_id = "item";
 
-            addLoadObj(room, item_name, item_path, item_size, item_position, item_id, room.view_mode);
+                addLoadObj(target[0].object, item_name, item_path, item_size, item_position, item_id, room.view_mode);
+            }
+            
         }, false);
     }
   
@@ -335,7 +375,8 @@ export const setInputEvent = (room, target) => {
         const height = parseFloat(document.getElementById("resize_height").value);
 
         if (isNaN(width) || isNaN(height)) return;
-        resizeRoom(room, width, height);
+        if (target.length === 0) return;
+        resizeRoom(target[0].object, width, height);
     });
 
     document.getElementById("resize_height").addEventListener("input", () => {
@@ -343,7 +384,8 @@ export const setInputEvent = (room, target) => {
         const height = parseFloat(document.getElementById("resize_height").value);
 
         if (isNaN(width) || isNaN(height)) return;
-        resizeRoom(room, width, height);
+        if (target.length === 0) return;
+        resizeRoom(target[0].object, width, height);
     });
 
     document.getElementById("resize_item").addEventListener("input", () => {

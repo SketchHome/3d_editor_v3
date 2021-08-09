@@ -6,7 +6,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PointerLockControls} from "three/examples/jsm/controls/PointerLockControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
-import { addLight, addLoadObj, addRoom } from "./module/_addObject";
+import { addLight, addRoom } from "./module/_addObject";
 
 import Detailer from "./Detailer/Detailer"
 
@@ -30,9 +30,6 @@ class Editor extends Component {
 		renderer.shadowMap.renderReverseSided = false;
 		camera.position.y = 10;
 		this.mount.appendChild(renderer.domElement);
-
-		//var ambientLight = new THREE.AmbientLight(0xffffff, 1); // soft white light
-		//scene.add( ambientLight );
 
 		let target = [];
 		let drag_target = [];
@@ -62,15 +59,9 @@ class Editor extends Component {
 		room.is_person_view_mode = false;
 		room.name = "room";
 		room.size = room_data.room.size;
-		room_data.room.forEach(_room => {
-			const room_group = new THREE.Group();
-			room_group.name = `group_${_room.id}`;
+		room_data.room.forEach(room_info => {
+			addRoom(room, room_info, 2);
 
-			addRoom(room_group, _room, 2);
-			_room.item.forEach(item => {
-				addLoadObj(room_group, item.name, item.size, item.position, item.id, 2);
-			});
-			room.add(room_group)
 		})
 		scene.add(room);
 		
