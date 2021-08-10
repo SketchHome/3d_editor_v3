@@ -87,6 +87,9 @@ const relocateRoom_2D = (target) => {
 const relocateWindow_2D = (target) => {
     target.parent.children.forEach(obj => {
         if (obj.name.split("_")[0] === "wall") {
+
+            console.log("obj.wall_type :", obj.wall_type);
+
             let min, max;
             switch (obj.wall_type) {
                 case "horizon":
@@ -98,7 +101,7 @@ const relocateWindow_2D = (target) => {
                     if (min < target.position.x && target.position.x < max)
                         target.window_position.x = target.position.x;
                     else
-                        target.position.x = (target.position.x > 0) ? max : min;
+                        target.position.x = (target.position.x > min) ? max : min;
                     break;
                 case "vertical":
                     target.position.x = obj.position.x; // fixed x axis
@@ -109,7 +112,7 @@ const relocateWindow_2D = (target) => {
                     if (min < target.position.z && target.position.z < max)
                         target.window_position.z = target.position.z;
                     else
-                        target.position.z = (target.position.z > 0) ? max : min;
+                        target.position.z = (target.position.z > min) ? max : min;
                     break;
                 default:
                     break;
