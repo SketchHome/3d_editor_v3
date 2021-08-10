@@ -81,7 +81,7 @@ export const relocateDragTarget = (target, view_mode) => {
 }
 
 const relocateRoom_2D = (target) => {
-
+    
 }
 
 const relocateWindow_2D = (target) => {

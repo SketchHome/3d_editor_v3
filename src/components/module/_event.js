@@ -81,6 +81,8 @@ export const setMouseEvent = (width, height,
             return;
         }
 
+        drag_target[0].position.setY(0); //fix position
+
         relocateDragTarget(event.object, room.view_mode);
     });
 
