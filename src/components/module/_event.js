@@ -81,16 +81,18 @@ export const setMouseEvent = (width, height,
             return;
         }
 
+        drag_target[0].position.setY(0); //fix position
+
         relocateDragTarget(event.object, room.view_mode);
     });
 
     dragControls.addEventListener("dragend", () => {
         if (room.edit_mode === 'room') {
-            drag_target[0].room_position = {
+            /*drag_target[0].room_position = {
                 'x': drag_target[0].position.x,
                 'y': drag_target[0].position.y,
                 'z': drag_target[0].position.z
-            };
+            };*/
         }
         console.log("drag end");
         dragControls.enabled = false;
