@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import * as THREE from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { MapControls, OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PointerLockControls} from "three/examples/jsm/controls/PointerLockControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
@@ -36,12 +36,14 @@ class Editor extends Component {
 		const controls = new OrbitControls(camera, renderer.domElement);
 		const dragControls = new DragControls(drag_target, camera, renderer.domElement);
 		const viewControls = new PointerLockControls(camera, renderer.domElement);
+		const mapControls = new MapControls (camera, renderer.domElement);
 		const mouse = new THREE.Vector2();
 		const raycaster = new THREE.Raycaster();
 
 		controls.enabled = false;
 		dragControls.transformGroup = true;
 		dragControls.enabled = false;
+		mapControls.enabled = false;
 
 		const light = new THREE.Group();
 		var ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
@@ -68,7 +70,7 @@ class Editor extends Component {
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
 		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, viewControls, controls, scene, target, drag_target, room, light);
+		setButtonEvent(camera, viewControls, controls, mapControls, scene, target, drag_target, room, light);
 		setInputEvent(room, target);
 
 		const animate = function () {
