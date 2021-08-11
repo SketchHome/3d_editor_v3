@@ -6,7 +6,7 @@ import { MapControls, OrbitControls } from "three/examples/jsm/controls/OrbitCon
 import { PointerLockControls} from "three/examples/jsm/controls/PointerLockControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
-import { addLight, addRoom } from "./module/_addObject";
+import { addGrid, addLight, addRoom } from "./module/_addObject";
 
 import Detailer from "./Detailer/Detailer"
 
@@ -66,6 +66,12 @@ class Editor extends Component {
 
 		})
 		scene.add(room);
+
+		// add grid
+		const grid = new THREE.Group();
+		grid.name = "group_grid";
+		addGrid(grid, 1000, 1000);
+		scene.add(grid);
 		
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);

@@ -88,7 +88,6 @@ const relocateWindow_2D = (target) => {
     target.parent.children.forEach(obj => {
         if (obj.name.split("_")[0] === "wall") {
 
-            const cur_room = target.parent.parent;
             let min, max;
             switch (obj.wall_type) {
                 case "horizon":
@@ -118,6 +117,7 @@ const relocateWindow_2D = (target) => {
                 default:
                     break;
             }
+            target.position.y = 0.0002
         }
     });
 }
@@ -154,6 +154,9 @@ const relocateDoor_2D = (target) => {
                     break;
             }
         }
+        target.position.y = 0.0002
+        console.log(target.position);
+        // console.log(target.scale);
     });
 }
 

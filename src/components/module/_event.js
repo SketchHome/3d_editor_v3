@@ -52,7 +52,11 @@ export const setMouseEvent = (width, height,
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        let intersects = raycaster.intersectObjects(scene.children, true);
+        intersects = intersects.filter(value => {
+            return value.object.name !== "grid"
+        })
+        console.log(intersects);
         setTarget(intersects, target, drag_target, room.edit_mode, room);
     }, false);
 
@@ -64,7 +68,11 @@ export const setMouseEvent = (width, height,
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        let intersects = raycaster.intersectObjects(scene.children, true);
+        intersects = intersects.filter(value => {
+            return value.object.name !== "grid"
+        })
+        console.log(intersects);
         setDragTarget(intersects, target, drag_target, room.edit_mode);
     }, false);
 
@@ -114,6 +122,9 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
                 removeCeiling(_room);
             });
         document.getElementById("mode_name").innerHTML = "view";
+        scene.children.forEach((group) => {
+            if (group.name.split("_")[1] === "grid") group.children[0].visible = true;
+        });
     });
 
     document.getElementById("3D_MODE_btn").addEventListener("click", () => {        
@@ -130,6 +141,9 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
                 resizeWallTextureModeChange(_room);
             });
         document.getElementById("mode_name").innerHTML = "view";
+        scene.children.forEach((group) => {
+            if (group.name.split("_")[1] === "grid") group.children[0].visible = false;
+        });
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
@@ -148,6 +162,9 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
             });
       
         document.getElementById("mode_name").innerHTML = "person view - use your keyboard(W, A, S, D)!!";
+        scene.children.forEach((group) => {
+            if (group.name.split("_")[1] === "grid") group.children[0].visible = false;
+        });
     })
 
     document.getElementById("ROOM_EDIT_MODE_btn").addEventListener("click", () => {
@@ -246,6 +263,13 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
     document.getElementById("Show_light_info").addEventListener("click", () => {
         console.log(light);
     });
+    document.getElementById("show_grid").addEventListener("click", () => {
+        scene.children.forEach((group) => {
+            if (group.name.split("_")[1] === "grid") {
+                group.children[0].visible = !group.children[0].visible;
+            }
+        });
+    })
 
     document.getElementById("show_ceiling").addEventListener("click", () => {
         room.children.forEach((room_group) => {
