@@ -1,3 +1,4 @@
+import { showRoomInfo } from "./_common";
 import { removeDragTarget } from "./_drag"
 
 export const setMouse = (event, width, height, mouse) => {
@@ -19,6 +20,7 @@ export const setTarget = (intersects, target, drag_target, edit_mode, rooms) => 
                         removeTarget(target);
                         removeDragTarget(drag_target);
                         addTarget(target, intersects[0].object, edit_mode, rooms);
+                        showRoomInfo(target[0].object);
                     }
                     break
                 case 'item':
@@ -58,6 +60,7 @@ const addTargetRoom = (target, object, rooms) => {
         if (room.name === object.parent.room_name) {
             target.push({ object: room })
             document.getElementById("target_name").innerHTML = room.name;
+            showRoomInfo(room);
         }
     })
 }

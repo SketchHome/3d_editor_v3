@@ -56,7 +56,7 @@ export const setMouseEvent = (width, height,
         intersects = intersects.filter(value => {
             return value.object.name !== "grid"
         })
-        console.log(intersects);
+
         setTarget(intersects, target, drag_target, room.edit_mode, room);
     }, false);
 
@@ -72,7 +72,6 @@ export const setMouseEvent = (width, height,
         intersects = intersects.filter(value => {
             return value.object.name !== "grid"
         })
-        console.log(intersects);
         setDragTarget(intersects, target, drag_target, room.edit_mode);
     }, false);
 
@@ -399,6 +398,8 @@ export const setInputEvent = (room, target) => {
         const width = parseFloat(document.getElementById("resize_width").value);
         const height = parseFloat(document.getElementById("resize_height").value);
 
+        document.getElementById("room_width").innerHTML = width;
+
         if (isNaN(width) || isNaN(height)) return;
         if (target.length === 0) return;
         resizeRoom(target[0].object, width, height);
@@ -407,6 +408,8 @@ export const setInputEvent = (room, target) => {
     document.getElementById("resize_height").addEventListener("input", () => {
         const width = parseFloat(document.getElementById("resize_width").value);
         const height = parseFloat(document.getElementById("resize_height").value);
+
+        document.getElementById("room_height").innerHTML = height;
 
         if (isNaN(width) || isNaN(height)) return;
         if (target.length === 0) return;
