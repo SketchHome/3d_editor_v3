@@ -42,8 +42,8 @@ export const setZoomMode = (controls, mapControls, mode) => {
             mapControls.enabled = true;
             mapControls.enableDamping = false;
             mapControls.enableKeys = false;
-            mapControls.enablePan = true;
-            mapControls.enableRotate = true;
+            mapControls.enablePan = true; //left
+            mapControls.enableRotate = false; //right
             mapControls.enableZoom = true;
             break;
         case 3:
