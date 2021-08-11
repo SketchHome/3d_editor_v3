@@ -68,7 +68,10 @@ class Editor extends Component {
 		scene.add(room);
 
 		// add grid
-		addGrid(scene, 1000, 1000);
+		const grid = new THREE.Group();
+		grid.name = "group_grid";
+		addGrid(grid, 1000, 1000);
+		scene.add(grid);
 		
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);

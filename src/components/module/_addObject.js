@@ -165,9 +165,10 @@ export const addLight = (light_group, position, intensity) => {
    light_group.add(light);
 }
 
-export const addGrid = (scene, size, division) => {
+export const addGrid = (group, size, division) => {
     const grid = new THREE.GridHelper(size, division, 0xFF0000, 0x808080);
     grid.position.setY(-0.1);
     grid.name = 'grid'
-    scene.add(grid);
+    grid.visible = true;
+    group.add(grid);
 }
