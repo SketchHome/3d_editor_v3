@@ -52,7 +52,11 @@ export const setMouseEvent = (width, height,
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        let intersects = raycaster.intersectObjects(scene.children, true);
+        intersects = intersects.filter(value => {
+            return value.object.name !== "grid"
+        })
+        console.log(intersects);
         setTarget(intersects, target, drag_target, room.edit_mode, room);
     }, false);
 
@@ -64,7 +68,11 @@ export const setMouseEvent = (width, height,
         setMouse(event, width, height, mouse);
 
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
+        let intersects = raycaster.intersectObjects(scene.children, true);
+        intersects = intersects.filter(value => {
+            return value.object.name !== "grid"
+        })
+        console.log(intersects);
         setDragTarget(intersects, target, drag_target, room.edit_mode);
     }, false);
 

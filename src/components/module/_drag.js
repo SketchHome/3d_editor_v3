@@ -88,7 +88,6 @@ const relocateWindow_2D = (target) => {
     target.parent.children.forEach(obj => {
         if (obj.name.split("_")[0] === "wall") {
 
-            const cur_room = target.parent.parent;
             let min, max;
             switch (obj.wall_type) {
                 case "horizon":

@@ -164,6 +164,8 @@ export const createCeilingMesh = (size, position) => {
     const material = new THREE.MeshLambertMaterial({ color: "#e6e6e6" });
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const ceiling_mesh = new THREE.Mesh(geometry, material);
+
+    console.log(size);
     
     ceiling_mesh.scale.set(size.x, 0.1, size.z);
     ceiling_mesh.position.set(position.x ,-0.05 + 3, position.z);

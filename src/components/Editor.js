@@ -6,7 +6,7 @@ import { MapControls, OrbitControls } from "three/examples/jsm/controls/OrbitCon
 import { PointerLockControls} from "three/examples/jsm/controls/PointerLockControls";
 
 import { setMouseEvent, setButtonEvent, setInputEvent, setKeyboardEvent } from "./module/_event";
-import { addLight, addRoom } from "./module/_addObject";
+import { addGrid, addLight, addRoom } from "./module/_addObject";
 
 import Detailer from "./Detailer/Detailer"
 
@@ -66,6 +66,9 @@ class Editor extends Component {
 
 		})
 		scene.add(room);
+
+		// add grid
+		addGrid(scene, 1000, 1000);
 		
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
