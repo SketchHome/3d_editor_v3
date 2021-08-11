@@ -155,7 +155,7 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
         room.edit_mode = 'room';
         room.is_edit_mode = true;
         room.is_zoom_mode = false;
-        setDragMode(controls);
+        setDragMode(controls, mapControls);
         document.getElementById("mode_name").innerHTML = "room edit";
     });
 
@@ -164,7 +164,7 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
         room.edit_mode = 'item';
         room.is_edit_mode = true;
         room.is_zoom_mode = false;
-        setDragMode(controls);
+        setDragMode(controls, mapControls);
         document.getElementById("mode_name").innerHTML = "item edit";
     });
 

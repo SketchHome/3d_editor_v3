@@ -60,6 +60,7 @@ export const setZoomMode = (controls, mapControls, mode) => {
     }
 };
 
-export const setDragMode = (controls) => {
+export const setDragMode = (controls, mapControls) => {
     controls.enabled = false;
+    mapControls.enabled = false;
 };
