@@ -1,7 +1,7 @@
 import { OBJExporter } from "three/examples/jsm/exporters/OBJExporter";
 import * as THREE from "three"
 
-export const removeObject = (scene, target, drag_target) => {
+export const removeItem = (target, drag_target) => {
     let temp = target.pop().object;
 
     if (temp.name === "load_object_part") {
@@ -21,6 +21,13 @@ export const removeObject = (scene, target, drag_target) => {
     }
 
     temp = undefined;
+
+    if (drag_target.length !== 0) drag_target.pop();
+}
+
+export const removeRoom = (target, drag_target) => {
+    let room = target.pop().object;
+    room.parent.remove(room);
 
     if (drag_target.length !== 0) drag_target.pop();
 }

@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, changeFloorTexture, removeObject, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange } from "./_common";
+import { changeFloorColor, changeWallColor, changeFloorTexture, removeItem, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange, removeRoom } from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow, addRoom } from "./_addObject"
 import { saveStatus } from "./_save"
 
@@ -193,8 +193,10 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
 
     document.getElementById("REMOVE_btn").addEventListener("click", () => {
         if (target.length === 0) return;
+        if (room.is_edit_mode === false) return;
 
-        removeObject(scene, target, drag_target);
+        if (room.edit_mode === 'room') removeRoom(target, drag_target);
+        if (room.edit_mode === 'item') removeItem(target, drag_target);
         document.getElementById("target_name").innerHTML = "";
     }, false);
 
