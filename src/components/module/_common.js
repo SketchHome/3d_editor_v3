@@ -219,16 +219,37 @@ const relocateWall = (wall, width, height, position) => {
 
 
 const relocateObject = (object) => {
-    object.parent.children.forEach(child => {
+    object.parent.children.forEach(child => { // child : wall, object : door, window
         if (child.name.split("_")[0] === "wall") {
             switch (child.wall_direction) {
                 case "top":
                 case "bottom":
-                    object.position.setZ(child.position.z);
+                    const wallPositionRight = child.position.x + (child.scale.x / 2);
+                    const wallPositionLeft = child.position.x - (child.scale.x / 2);
+                    const itemPositionRight = object.position.x + (object.scale.x / 2);
+                    const itemPositionLeft = object.position.x - (object.scale.x / 2);
+
+                    if (child.scale.x <= object.scale.x) object.position.setX(child.position.x); // wall is smaller than window or door
+                    else {
+                        if (wallPositionRight < itemPositionRight) object.position.setX(wallPositionRight - (object.scale.x / 2));
+                        else if (wallPositionLeft > itemPositionLeft) object.position.setX(wallPositionLeft + (object.scale.x / 2));
+
+                    }
+                    object.position.setZ(child.position.z); // fix position to wall
                     break;
                 case "right":
                 case "left":
-                    object.position.setX(child.position.x);
+                    const wallPositionTop = child.position.z + (child.scale.z / 2);
+                    const wallPositionBottom = child.position.z - (child.scale.z / 2);
+                    const itemPositionTop = object.position.z + (object.scale.x / 2);
+                    const itemPositionBottom = object.position.z - (object.scale.x / 2);
+
+                    if (child.scale.z <= object.scale.x) object.position.setZ(child.position.z);
+                    else {
+                        if (wallPositionTop < itemPositionTop) object.position.setZ(wallPositionTop - (object.scale.x / 2));
+                        else if (wallPositionBottom > itemPositionBottom) object.position.setZ(wallPositionBottom + (object.scale.x / 2));
+                    }
+                    object.position.setX(child.position.x); // fix position to wall
                     break;
                 default:
                     break;
