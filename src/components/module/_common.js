@@ -398,3 +398,27 @@ export const resizeWallTextureModeChange = (room) => {
         }
     });
 }
+
+export const showRoomInfo = (room) => {
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === 'wall') {
+            group.children.forEach((mesh) =>{
+                if (mesh.name.split("_")[0] === 'wall') {
+                    switch (mesh.wall_type) {
+                        case "horizon" :
+                            
+                            document.getElementById("room_width").innerHTML = mesh.scale.x;
+                            document.getElementById("resize_width").setAttribute.value = mesh.scale.x;
+                            break;
+                        case "vertical" :
+                            document.getElementById("room_height").innerHTML = mesh.scale.z;
+                            document.getElementById("resize_height").setAttribute.value = mesh.scale.z;
+                            break;
+                        default :
+                            break;
+                    }
+                }
+            });
+        }
+    });
+}

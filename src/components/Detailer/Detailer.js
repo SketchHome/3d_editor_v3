@@ -55,12 +55,14 @@ const Detailer = () => {
                 <table>
                     <tbody>
                         <tr>
-                            <td>width: </td>
-                            <td><input id="resize_width" style={{ width: "100px" }} type="range" step="0.1" min="3" max="20" defaultValue="11" /></td>
+                            <td>width </td>
+                            <td><input id="resize_width" style={{ width: "100px"}} type="range" step="0.1" min="3" max="20" defaultValue="11" /></td>
+                            <td><span id="room_width">11</span></td>
                         </tr>
                         <tr>
-                            <td>height: </td>
+                            <td>height </td> 
                             <td><input id="resize_height" style={{ width: "100px" }} type="range" step="0.1" min="3" max="20" defaultValue="7" /></td>
+                            <td><span id="room_height">7</span></td>
                         </tr>
                     </tbody>
                 </table>
