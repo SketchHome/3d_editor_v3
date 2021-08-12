@@ -37,7 +37,7 @@ const addDragItemTarget = (drag_target, object) => {
             break;
         case "load":
             drag_target.push(object.parent);
-            object.material.color.set("blue");
+            // object.material.color.set("blue");
             break;
         default:
             break;
