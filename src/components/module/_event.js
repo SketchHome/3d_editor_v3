@@ -83,13 +83,6 @@ export const setMouseEvent = (width, height,
     });
 
     dragControls.addEventListener("drag", (event) => {
-        if (drag_target.length === 0) {
-            dragControls.enabled = false;
-            return;
-        }
-
-        drag_target[0].position.setY(0); //fix position
-
         relocateDragTarget(event.object, room.view_mode);
     });
 
