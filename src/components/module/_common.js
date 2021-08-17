@@ -412,8 +412,7 @@ export const showRoomInfo = (room) => {
             group.children.forEach((mesh) =>{
                 if (mesh.name.split("_")[0] === 'wall') {
                     switch (mesh.wall_type) {
-                        case "horizon" :
-                            
+                        case "horizon" :          
                             document.getElementById("room_width").innerHTML = mesh.scale.x;
                             document.getElementById("resize_width").setAttribute.value = mesh.scale.x;
                             break;
@@ -429,3 +428,51 @@ export const showRoomInfo = (room) => {
         }
     });
 }
+
+export const changeItemRoomGroup = (group_item, room) => {
+    let positions = []
+    room.children.forEach((group) => {
+        positions.push(getRoomPositions(group));
+    });
+
+    positions.forEach((position) => {
+        if ((group_item.position.x < position.topRight.x) && (group_item.position.x > position.bottomLeft.x)) { // check item is inside of room
+            if ((group_item.position.z < position.topRight.z) && (group_item.position.z > position.bottomLeft.z)) {
+                group_item.parent.parent.children.forEach((group_room) => {
+                    if (group_room.name === position.name) {
+                        group_room.add(group_item);
+                    }
+                });
+            }
+        }
+    })
+}
+
+const getRoomPositions = (room) => {
+    let topRight, bottomLeft;
+    let roomPositions;
+    let roomName = room.name;
+
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "wall") {
+            group.children.forEach((mesh) => {
+                if (mesh.name.split("_")[0] === "wall") {
+                    switch (mesh.wall_direction) {
+                        case "top" :
+                            topRight = {x: mesh.position.x + (mesh.scale.x / 2) , z: mesh.position.z};
+                            break;
+                        case "bottom" :
+                            bottomLeft = {x:mesh.position.x - (mesh.scale.x / 2) , z: mesh.position.z};
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        roomPositions = {name: roomName, topRight: topRight, bottomLeft: bottomLeft};
+    });
+    return roomPositions;
+}
+
