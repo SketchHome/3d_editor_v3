@@ -225,7 +225,7 @@ const relocateWall = (wall, width, height, position) => {
 }
 
 
-const relocateObject = (object) => {
+export const relocateObject = (object) => {
     object.parent.children.forEach(child => { // child : wall, object : door, window
         if (child.name.split("_")[0] === "wall") {
             switch (child.wall_direction) {
