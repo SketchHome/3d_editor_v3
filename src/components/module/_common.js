@@ -433,8 +433,7 @@ export const showRoomInfo = (room) => {
             group.children.forEach((mesh) =>{
                 if (mesh.name.split("_")[0] === 'wall') {
                     switch (mesh.wall_type) {
-                        case "horizon" :
-                            
+                        case "horizon" :          
                             document.getElementById("room_width").innerHTML = mesh.scale.x;
                             document.getElementById("resize_width").setAttribute.value = mesh.scale.x;
                             break;
@@ -450,3 +449,68 @@ export const showRoomInfo = (room) => {
         }
     });
 }
+
+export const changeItemRoomGroup = (group_item, room) => {
+    console.log(room);
+    let positions = []
+    room.children.forEach((group) => {
+        positions.push(getRoomPositions(group));
+    });
+
+    const itemPositionX = group_item.position.x + group_item.parent.position.x; // absolute position
+    const itemPositionZ = group_item.position.z + group_item.parent.position.z; // absolute position
+    console.log(positions);
+
+    positions.forEach((position) => {
+        console.log("item", itemPositionX, itemPositionZ);
+        console.log("topRight", position.topRight.x, position.topRight.z);
+        console.log("bottonLeft", position.bottomLeft.x, position.bottomLeft.z);
+        if ((itemPositionX < position.topRight.x) && (itemPositionX > position.bottomLeft.x)) { // check item is inside of room
+            if ((itemPositionZ < position.topRight.z) && (itemPositionZ > position.bottomLeft.z)) {
+                group_item.parent.parent.children.forEach((group_room) => {
+                    if (group_room.name === position.name) {
+                        group_room.add(group_item);
+                        getNewPositionOfItemGroup(itemPositionX, itemPositionZ, group_room, group_item);
+                        console.log(group_room.name);
+                    }
+                });
+            }
+        }
+    })
+}
+
+const getRoomPositions = (room) => {
+    let topRight, bottomLeft;
+    let roomPositions;
+    let roomName = room.name;
+
+    room.children.forEach((group) => {
+        if (group.name.split("_")[1] === "wall") {
+            group.children.forEach((mesh) => {
+                if (mesh.name.split("_")[0] === "wall") {
+                    switch (mesh.wall_direction) {
+                        case "top" :
+                            topRight = {x: room.position.x + mesh.position.x + (mesh.scale.x / 2) , z: room.position.z + mesh.position.z};
+                            break;
+                        case "bottom" :
+                            bottomLeft = {x: room.position.x + mesh.position.x - (mesh.scale.x / 2) , z: room.position.z +mesh.position.z};
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+        }
+
+        roomPositions = {name: roomName, topRight: topRight, bottomLeft: bottomLeft};
+    });
+    return roomPositions;
+}
+
+const getNewPositionOfItemGroup = (itemPositionX, itemPositionZ, room, group_item) => {
+    const realPositionX = itemPositionX - room.position.x;
+    const realPositionZ = itemPositionZ - room.position.z;
+
+    group_item.position.set(realPositionX, 0.001, realPositionZ);
+}
+

@@ -1,7 +1,7 @@
 import { setMouse, setTarget } from "./_target"
 import { setDragTarget, relocateDragTarget } from "./_drag";
 import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } from "./_mode";
-import { changeFloorColor, changeWallColor, changeFloorTexture, removeItem, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange, removeRoom } from "./_common";
+import { changeFloorColor, changeWallColor, changeFloorTexture, removeItem, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange, removeRoom, changeItemRoomGroup } from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow, addRoom } from "./_addObject"
 import { saveStatus } from "./_save"
 
@@ -87,13 +87,9 @@ export const setMouseEvent = (width, height,
     });
 
     dragControls.addEventListener("dragend", () => {
-        // if (room.edit_mode === 'room') {
-        //     drag_target[0].room_position = {
-        //         'x': drag_target[0].position.x,
-        //         'y': drag_target[0].position.y,
-        //         'z': drag_target[0].position.z
-        //     };
-        // }
+        if (room.edit_mode === 'item') {
+            changeItemRoomGroup(target[0].object.parent, room);
+        }
         console.log("drag end");
         dragControls.enabled = false;
     });
@@ -211,7 +207,7 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
             const default_room = {
                     "id": "room_3312",
                     "type": "square",
-                    "position": {"x": 0, "y": 0, "z": 0},
+                    "position": {"x": 8, "y": 0, "z": 2},
                     "size": {"x": 5, "y": 3, "z": 5},
                     "wall": default_wall.map((info, i) => {return {"id": `wall_${i}`, "type": info[1], "direction": info[0], "door":[], "window": []}}),
                     "item": []

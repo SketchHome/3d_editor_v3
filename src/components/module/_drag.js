@@ -2,28 +2,29 @@ export const setDragTarget = (intersects, target, drag_target, edit_mode) => {
     if (intersects.length === 0 || target.length === 0) return;
     switch (edit_mode) {
         case 'room':
-            //if (intersects[0].object.name !== 'floor') return;
-            const temp_target = intersects[0].object.parent.parent;
-            // console.log("temp_target :", temp_target.name);
-            // console.log("intersects[0].object.name :", intersects[0].object.name);
-            // console.log("target[0].object.name :", target[0].object.name);
-            
-            if (drag_target.length === 0 && target[0].object.name === temp_target.name) {
-                addDragRoomTarget(drag_target, temp_target);
+            if (intersects[0].object.name === 'floor') {
+                const temp_target = intersects[0].object.parent.parent;
+                if (drag_target.length === 0 && target[0].object.name === temp_target.name) {
+                    addDragRoomTarget(drag_target, temp_target);
+                }
             }
-            else if (drag_target.length === 0 && target[0].object.name === intersects[0].object.name){
-                addDragRoomTarget(drag_target, intersects[0].object);
+            else if (intersects[0].object.name.split("_")[0] === "wall") {
+                drag_target.push(intersects[0].object);
             }
-            break
+            break;
         case 'item':
             if (drag_target.length === 0 && target[0].object.uuid === intersects[0].object.uuid) {
                 addDragItemTarget(drag_target, intersects[0].object);
             }
-            break
+            break;
         default:
-            break
+            break;
     }
 };
+
+export const resizeWallByDrag = () => {
+
+}
 
 export const removeDragTarget = (target) => {
     target.pop();
@@ -52,7 +53,6 @@ const addDragItemTarget = (drag_target, object) => {
 
     document.getElementById("target_name").innerHTML = object.name + " (drag)";
 };
-
 
 export const relocateDragTarget = (target, view_mode) => {
     if (view_mode === 2) {
