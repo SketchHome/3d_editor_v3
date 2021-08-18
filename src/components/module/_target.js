@@ -16,7 +16,8 @@ export const setTarget = (intersects, target, drag_target, edit_mode, rooms) => 
             const temp_target = intersects[0].object;
             switch (edit_mode) {
                 case 'room':
-                    if (target[0].object.name !== temp_target.parent.room_name) {
+                    if ((target[0].object.name !== temp_target.name) || (target[0].object.name !== temp_target.parent.room_name)) {
+                    // if (target[0].object.name !== temp_target.parent.room_name) {
                         removeTarget(target);
                         removeDragTarget(drag_target);
                         addTarget(target, intersects[0].object, edit_mode, rooms);
@@ -56,13 +57,20 @@ const addTarget = (target, object, edit_mode, rooms) => {
 }
 
 const addTargetRoom = (target, object, rooms) => {
-    rooms.children.forEach(room => {
-        if (room.name === object.parent.room_name) {
-            target.push({ object: room })
-            document.getElementById("target_name").innerHTML = room.name;
-            showRoomInfo(room);
-        }
-    })
+    if(object.name === "floor"){
+        rooms.children.forEach(room => {
+            if (room.name === object.parent.room_name) {
+                target.push({ object: room })
+                document.getElementById("target_name").innerHTML = room.name;
+                showRoomInfo(room);
+            }
+        });
+    }
+    else{
+        target.push({ object: object })
+        document.getElementById("target_name").innerHTML = object.name;
+        showRoomInfo(object.parent);
+    }
 }
 
 const addTargetItem = (target, object) => {
