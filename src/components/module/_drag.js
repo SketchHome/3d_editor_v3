@@ -2,10 +2,17 @@ export const setDragTarget = (intersects, target, drag_target, edit_mode) => {
     if (intersects.length === 0 || target.length === 0) return;
     switch (edit_mode) {
         case 'room':
-            if (intersects[0].object.name !== 'floor') return;
+            //if (intersects[0].object.name !== 'floor') return;
             const temp_target = intersects[0].object.parent.parent;
+            // console.log("temp_target :", temp_target.name);
+            // console.log("intersects[0].object.name :", intersects[0].object.name);
+            // console.log("target[0].object.name :", target[0].object.name);
+            
             if (drag_target.length === 0 && target[0].object.name === temp_target.name) {
                 addDragRoomTarget(drag_target, temp_target);
+            }
+            else if (drag_target.length === 0 && target[0].object.name === intersects[0].object.name){
+                addDragRoomTarget(drag_target, intersects[0].object);
             }
             break
         case 'item':
@@ -59,8 +66,11 @@ export const relocateDragTarget = (target, view_mode) => {
         else if (target.name.split("_")[0] === "door") {
             relocateDoor_2D(target);
         }
+        else if (target.name.split("_")[0] === "wall"){
+            relocateWall_2D(target);
+        }
         else if (target.name.split("_")[1] === "room") {
-            relocateRoom_2D(target)
+            relocateRoom_2D(target);
         }
     }
     else if (view_mode === 3) {
@@ -81,6 +91,113 @@ export const relocateDragTarget = (target, view_mode) => {
 }
 
 const relocateRoom_2D = (target) => {
+    
+}
+
+const relocateWall_2D = (target) => {
+    let oppositeWallDir;
+    let newWidth;
+
+    switch(target.wall_direction){
+        case "right" :
+            oppositeWallDir = "left";
+            break;
+        case "left" :
+            oppositeWallDir = "right";
+            break;
+        case "top" :
+            oppositeWallDir = "bottom";
+            break;
+        case "bottom" :
+            oppositeWallDir = "top";
+            break;
+    }
+
+    target.parent.parent.children.forEach(obj => {
+        if(obj.name.split("_")[1] === "wall"){
+            if(obj.children[0].wall_direction === oppositeWallDir){
+                if(oppositeWallDir == "left" || oppositeWallDir === "right"){
+                    newWidth = Math.abs(target.position.x - obj.children[0].position.x);
+                    if(target.parent.children.length > 1){
+                        target.parent.children.forEach(mesh => {
+                            mesh.position.x = target.position.x;
+                            mesh.position.z = obj.children[0].position.z;
+                        });
+                    }
+                    else target.position.z = obj.children[0].position.z;
+                    
+                    resizeWallNFloor_2D(target, target.wall_type, newWidth);
+                }
+                else if(oppositeWallDir == "top" || oppositeWallDir === "bottom"){
+                    newWidth = Math.abs(target.position.z - obj.children[0].position.z);
+                    if(target.parent.children.length > 1){
+                        target.parent.children.forEach(mesh => {
+                            mesh.position.x = obj.children[0].position.x;
+                            mesh.position.z = target.position.z;
+                        });
+                    }
+                    else target.position.x = obj.children[0].position.x;
+
+                    resizeWallNFloor_2D(target, target.wall_type, newWidth);
+                }
+                target.position.y = obj.position.y;
+            }
+        }
+    });
+}
+
+const resizeWallNFloor_2D = (target, wallType, newWidth) => {
+    let oppositeWall;
+
+    if(wallType === "horizon"){
+        oppositeWall = "vertical";
+    }
+    else{
+        oppositeWall = "horizon";
+    }
+
+    target.parent.parent.children.forEach(obj => {
+        if(obj.name.split("_")[1] === "floor"){
+            if(oppositeWall === "vertical"){
+                obj.children[0].scale.z = newWidth;
+                obj.children[0].position.z = obj.children[0].mesh_position.z + (target.position.z - target.mesh_position.z)/2;
+                obj.children[0].mesh_position.z = obj.children[0].position.z;
+                obj.parent.room_position.z = obj.children[0].position.z; //room_position
+                obj.parent.room_size.z =  newWidth; // room size
+            }
+            else if(oppositeWall === "horizon"){
+                obj.children[0].scale.x = newWidth;
+                obj.children[0].position.x = obj.children[0].mesh_position.x + (target.position.x - target.mesh_position.x)/2;
+                obj.children[0].mesh_position.x = obj.children[0].position.x;
+                obj.parent.room_position.x = obj.children[0].position.x; //room_position
+                obj.parent.room_size.x =  newWidth; // room size
+            }
+        }
+        else{
+            if(obj.name.split("_")[1] === "wall"){
+                if(obj.children[0].wall_type === oppositeWall && oppositeWall === "vertical"){
+                    obj.children[0].scale.z = newWidth;
+                    obj.children[0].position.z = obj.children[0].mesh_position.z + (target.position.z - target.mesh_position.z)/2;
+                    obj.children[0].mesh_position.z = obj.children[0].position.z;
+                }
+                
+                if(obj.children[0].wall_type === oppositeWall && oppositeWall === "horizon"){
+                    obj.children[0].scale.x = newWidth;
+                    obj.children[0].position.x = obj.children[0].mesh_position.x + (target.position.x - target.mesh_position.x)/2;
+                    obj.children[0].mesh_position.x = obj.children[0].position.x;
+                }
+            }
+        }
+    });
+
+    if(oppositeWall === "vertical"){
+        target.mesh_position.z = target.position.z;
+    }
+    if(oppositeWall === "horizon"){
+        target.mesh_position.x = target.position.x;
+    }
+
+
     
 }
 

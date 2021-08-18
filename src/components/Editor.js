@@ -70,7 +70,7 @@ class Editor extends Component {
 		// add grid
 		const grid = new THREE.Group();
 		grid.name = "group_grid";
-		addGrid(grid, 1000, 1000);
+		addGrid(grid, 100, 100);
 		scene.add(grid);
 		
 		// set event

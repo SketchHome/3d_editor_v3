@@ -44,6 +44,7 @@ export const createWallMesh = (id, type, direction, room_size, dim, room_positio
             break;
     }
     wall_mesh.position.set(position.x, position.y, position.z);
+    wall_mesh.mesh_position = { "x" : position.x, "y" : position.y, "z" : position.z };
     wall_mesh.name = id;
     wall_mesh.wall_direction = direction;
 
@@ -153,6 +154,7 @@ export const createFloorMesh = (size, position) => {
     
     floor_mesh.scale.set(size.x, 0.1, size.z);
     floor_mesh.position.set(position.x, -0.05, position.z);
+    floor_mesh.mesh_position = { "x" : position.x, "y" : -0.05, "z" : position.z};
     floor_mesh.name = "floor";
 
     floor_mesh.receiveShadow = true;
