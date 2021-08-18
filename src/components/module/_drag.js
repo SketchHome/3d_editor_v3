@@ -9,7 +9,8 @@ export const setDragTarget = (intersects, target, drag_target, edit_mode) => {
                 }
             }
             else if (intersects[0].object.name.split("_")[0] === "wall") {
-                drag_target.push(intersects[0].object);
+                addDragRoomTarget(drag_target, intersects[0].object);
+                // drag_target.push(intersects[0].object);
             }
             break;
         case 'item':
