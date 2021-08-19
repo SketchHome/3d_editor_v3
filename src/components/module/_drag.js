@@ -166,7 +166,7 @@ const relocateWall_2D = (target) => {
     });
 }
 
-const resizeWallNFloor_2D = (target, wallType, newWidth, thick = 0.3) => {
+const resizeWallNFloor_2D = (target, wallType, newWidth, thick = 0.25) => {
     let oppositeWall;
 
     if(wallType === "horizon"){
