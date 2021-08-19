@@ -1,3 +1,5 @@
+import { relocateObject } from "./_common";
+
 export const setDragTarget = (intersects, target, drag_target, edit_mode) => {
     if (intersects.length === 0 || target.length === 0) return;
     switch (edit_mode) {
@@ -9,7 +11,7 @@ export const setDragTarget = (intersects, target, drag_target, edit_mode) => {
                 }
             }
             else if (intersects[0].object.name.split("_")[0] === "wall") {
-                drag_target.push(intersects[0].object);
+                addDragRoomTarget(drag_target, intersects[0].object);
             }
             break;
         case 'item':
@@ -115,10 +117,10 @@ const relocateWall_2D = (target) => {
 
     target.parent.parent.children.forEach(obj => {
         if(obj.name.split("_")[1] === "wall"){
-            if(obj.children[0].wall_direction === oppositeWallDir){
-                if(oppositeWallDir == "left" || oppositeWallDir === "right"){
+            if(obj.children[0].wall_direction === oppositeWallDir){ //obj.children[0] = wall
+                if(oppositeWallDir === "left" || oppositeWallDir === "right"){
                     newWidth = Math.abs(target.position.x - obj.children[0].position.x);
-                    if(target.parent.children.length > 1){
+                    if(target.parent.children.length > 1){ //target.parent = wall_group
                         target.parent.children.forEach(mesh => {
                             mesh.position.x = target.position.x;
                             mesh.position.z = obj.children[0].position.z;
@@ -128,7 +130,7 @@ const relocateWall_2D = (target) => {
                     
                     resizeWallNFloor_2D(target, target.wall_type, newWidth);
                 }
-                else if(oppositeWallDir == "top" || oppositeWallDir === "bottom"){
+                else if(oppositeWallDir === "top" || oppositeWallDir === "bottom"){
                     newWidth = Math.abs(target.position.z - obj.children[0].position.z);
                     if(target.parent.children.length > 1){
                         target.parent.children.forEach(mesh => {
@@ -141,6 +143,15 @@ const relocateWall_2D = (target) => {
                     resizeWallNFloor_2D(target, target.wall_type, newWidth);
                 }
                 target.position.y = obj.position.y;
+            }
+            else{
+                if(obj.children.length > 1){
+                    obj.children.forEach(mesh =>{
+                        if(mesh.name.split("_")[0] === "door" || mesh.name.split("_")[0] === "window"){
+                            relocateObject(mesh);
+                        }
+                    });
+                }
             }
         }
     });
