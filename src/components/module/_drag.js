@@ -97,10 +97,11 @@ const relocateRoom_2D = (target) => {
 }
 
 const relocateWall_2D = (target) => {
+    let curWallDir = target.wall_direction;
     let oppositeWallDir;
     let newWidth;
 
-    switch(target.wall_direction){
+    switch(curWallDir){
         case "right" :
             oppositeWallDir = "left";
             break;
@@ -122,24 +123,32 @@ const relocateWall_2D = (target) => {
                     newWidth = Math.abs(target.position.x - obj.children[0].position.x);
                     if(target.parent.children.length > 1){ //target.parent = wall_group
                         target.parent.children.forEach(mesh => {
-                            mesh.position.x = target.position.x;
-                            mesh.position.z = obj.children[0].position.z;
+                            if(mesh.name.split("_")[0] !== "wall"){ //door or window
+                                mesh.position.x = target.position.x;
+                            }
+                            else{ //wall
+                                mesh.position.x = target.position.x;
+                                mesh.position.z = obj.children[0].position.z;
+                            }
                         });
                     }
                     else target.position.z = obj.children[0].position.z;
-                    
                     resizeWallNFloor_2D(target, target.wall_type, newWidth);
                 }
                 else if(oppositeWallDir === "top" || oppositeWallDir === "bottom"){
                     newWidth = Math.abs(target.position.z - obj.children[0].position.z);
                     if(target.parent.children.length > 1){
                         target.parent.children.forEach(mesh => {
-                            mesh.position.x = obj.children[0].position.x;
-                            mesh.position.z = target.position.z;
+                            if(mesh.name.split("_")[0] !== "wall"){ //door or window
+                                mesh.position.z = target.position.z;
+                            }
+                            else{ //wall
+                                mesh.position.x = obj.children[0].position.x;
+                                mesh.position.z = target.position.z;
+                            }
                         });
                     }
                     else target.position.x = obj.children[0].position.x;
-
                     resizeWallNFloor_2D(target, target.wall_type, newWidth);
                 }
                 target.position.y = obj.position.y;
