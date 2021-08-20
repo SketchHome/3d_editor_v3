@@ -33,6 +33,7 @@ class Editor extends Component {
 
 		let target = [];
 		let drag_target = [];
+		let context_target = [];
 		const controls = new OrbitControls(camera, renderer.domElement);
 		const dragControls = new DragControls(drag_target, camera, renderer.domElement);
 		const viewControls = new PointerLockControls(camera, renderer.domElement);
@@ -75,8 +76,8 @@ class Editor extends Component {
 		
 		// set event
 		setKeyboardEvent(viewControls, controls, raycaster, camera, scene, room);
-		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room);
-		setButtonEvent(camera, viewControls, controls, mapControls, scene, target, drag_target, room, light);
+		setMouseEvent(width, height, mouse, viewControls, camera, scene, raycaster, target, drag_target, dragControls, room, context_target);
+		setButtonEvent(camera, viewControls, controls, mapControls, scene, target, drag_target, room, light, context_target);
 		setInputEvent(room, target);
 
 		const animate = function () {

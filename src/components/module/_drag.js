@@ -97,11 +97,10 @@ const relocateRoom_2D = (target) => {
 }
 
 const relocateWall_2D = (target) => {
-    let curWallDir = target.wall_direction;
     let oppositeWallDir;
     let newWidth;
 
-    switch(curWallDir){
+    switch(target.wall_direction){
         case "right" :
             oppositeWallDir = "left";
             break;
@@ -123,32 +122,24 @@ const relocateWall_2D = (target) => {
                     newWidth = Math.abs(target.position.x - obj.children[0].position.x);
                     if(target.parent.children.length > 1){ //target.parent = wall_group
                         target.parent.children.forEach(mesh => {
-                            if(mesh.name.split("_")[0] !== "wall"){ //door or window
-                                mesh.position.x = target.position.x;
-                            }
-                            else{ //wall
-                                mesh.position.x = target.position.x;
-                                mesh.position.z = obj.children[0].position.z;
-                            }
+                            mesh.position.x = target.position.x;
+                            mesh.position.z = obj.children[0].position.z;
                         });
                     }
                     else target.position.z = obj.children[0].position.z;
+                    
                     resizeWallNFloor_2D(target, target.wall_type, newWidth);
                 }
                 else if(oppositeWallDir === "top" || oppositeWallDir === "bottom"){
                     newWidth = Math.abs(target.position.z - obj.children[0].position.z);
                     if(target.parent.children.length > 1){
                         target.parent.children.forEach(mesh => {
-                            if(mesh.name.split("_")[0] !== "wall"){ //door or window
-                                mesh.position.z = target.position.z;
-                            }
-                            else{ //wall
-                                mesh.position.x = obj.children[0].position.x;
-                                mesh.position.z = target.position.z;
-                            }
+                            mesh.position.x = obj.children[0].position.x;
+                            mesh.position.z = target.position.z;
                         });
                     }
                     else target.position.x = obj.children[0].position.x;
+
                     resizeWallNFloor_2D(target, target.wall_type, newWidth);
                 }
                 target.position.y = obj.position.y;
@@ -166,7 +157,9 @@ const relocateWall_2D = (target) => {
     });
 }
 
+
 const resizeWallNFloor_2D = (target, wallType, newWidth, thick = 0.25) => {
+
     let oppositeWall;
 
     if(wallType === "horizon"){
@@ -186,7 +179,7 @@ const resizeWallNFloor_2D = (target, wallType, newWidth, thick = 0.25) => {
                 obj.parent.room_size.z =  newWidth; // room size
             }
             else if(oppositeWall === "horizon"){
-                obj.children[0].scale.x = newWidth ;
+                obj.children[0].scale.x = newWidth;
                 obj.children[0].position.x = obj.children[0].mesh_position.x + (target.position.x - target.mesh_position.x)/2;
                 obj.children[0].mesh_position.x = obj.children[0].position.x;
                 obj.parent.room_position.x = obj.children[0].position.x; //room_position
@@ -196,13 +189,13 @@ const resizeWallNFloor_2D = (target, wallType, newWidth, thick = 0.25) => {
         else{
             if(obj.name.split("_")[1] === "wall"){
                 if(obj.children[0].wall_type === oppositeWall && oppositeWall === "vertical"){
-                    obj.children[0].scale.z = newWidth + thick;
+                    obj.children[0].scale.z = newWidth;
                     obj.children[0].position.z = obj.children[0].mesh_position.z + (target.position.z - target.mesh_position.z)/2;
                     obj.children[0].mesh_position.z = obj.children[0].position.z;
                 }
                 
                 if(obj.children[0].wall_type === oppositeWall && oppositeWall === "horizon"){
-                    obj.children[0].scale.x = newWidth + thick;
+                    obj.children[0].scale.x = newWidth;
                     obj.children[0].position.x = obj.children[0].mesh_position.x + (target.position.x - target.mesh_position.x)/2;
                     obj.children[0].mesh_position.x = obj.children[0].position.x;
                 }
