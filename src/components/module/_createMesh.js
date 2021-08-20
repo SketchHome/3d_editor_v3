@@ -6,7 +6,7 @@ export const createWallMesh = (id, type, direction, room_size, dim, room_positio
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const wall_mesh = new THREE.Mesh(geometry, material);
     const size = new THREE.Vector3();
-    const thick = 0.3;
+    const thick = 0.25;
     switch (type) {
         case "horizon":
             size.set(room_size.x + thick, room_size.y, thick);

@@ -4,6 +4,7 @@ import { set2DMODE, set3DMODE, setZoomMode, setDragMode, setPersonViewMode } fro
 import { changeFloorColor, changeWallColor, changeFloorTexture, removeItem, resizeRoom, rotateObjectHorizon, rotateObjectVertical, hexToRgb, resizeItem, exportRoom, changeLightIntensity, setLightPositionX, setLightPositionY, setLightPositionZ, removeCeiling, changeWallTexture, resizeWallTextureModeChange, removeRoom, changeItemRoomGroup } from "./_common";
 import { addCeiling, addDoor, addLoadObj, addWindow, addRoom } from "./_addObject"
 import { saveStatus } from "./_save"
+import { contextMenu, removeContextMenu } from "./_contextMenu";
 
 export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scene, room) => {
 
@@ -42,10 +43,26 @@ export const setKeyboardEvent = (viewControls, controls, raycaster, camera, scen
 
 export const setMouseEvent = (width, height,
     mouse, viewControls, camera, scene, raycaster,
-    target, drag_target, dragControls, room) => {
+    target, drag_target, dragControls, room, context_target) => {
 
     // normal click event - set target 		
-    window.addEventListener("mousedown", (event) => {
+    // window.addEventListener("mousedown", (event) => {
+    //     if (viewControls.isLocked === true) return;
+    //     if (event.target.tagName !== "CANVAS") return;
+    //     if (room.is_edit_mode !== true) return;
+    //     setMouse(event, width, height, mouse);
+
+    //     raycaster.setFromCamera(mouse, camera);
+    //     let intersects = raycaster.intersectObjects(scene.children, true);
+    //     intersects = intersects.filter(value => {
+    //         return value.object.name !== "grid"
+    //     })
+
+    //     setTarget(intersects, target, drag_target, room.edit_mode, room.view_mode);
+    // }, false);
+
+    // click event
+    window.addEventListener("click", (event) => {
         if (viewControls.isLocked === true) return;
         if (event.target.tagName !== "CANVAS") return;
         if (room.is_edit_mode !== true) return;
@@ -58,6 +75,7 @@ export const setMouseEvent = (width, height,
         })
 
         setTarget(intersects, target, drag_target, room.edit_mode, room);
+        contextMenu(target, context_target, room.edit_mode, room.view_mode, event, drag_target);
     }, false);
 
     // special click event - set drag target 		
@@ -72,7 +90,8 @@ export const setMouseEvent = (width, height,
         intersects = intersects.filter(value => {
             return value.object.name !== "grid"
         })
-        setDragTarget(intersects, target, drag_target, room.edit_mode);
+        setDragTarget(intersects, target, drag_target, room.edit_mode, room.view_mode);
+        removeContextMenu(context_target);
     }, false);
 
     // let current_postion;
@@ -96,7 +115,7 @@ export const setMouseEvent = (width, height,
 
 };
 
-export const setButtonEvent = (camera, viewControls, controls, mapControls, scene, target, drag_target, room, light) => {
+export const setButtonEvent = (camera, viewControls, controls, mapControls, scene, target, drag_target, room, light, context_target) => {
 
     document.getElementById("2D_MODE_btn").addEventListener("click", () => {
         document.getElementById("ceiling_visibility").innerHTML = "Invisible";
@@ -132,6 +151,7 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
         scene.children.forEach((group) => {
             if (group.name.split("_")[1] === "grid") group.children[0].visible = false;
         });
+        removeContextMenu(context_target);
     });
 
     document.getElementById("PersonView_btn").addEventListener("click", () => {
@@ -153,6 +173,7 @@ export const setButtonEvent = (camera, viewControls, controls, mapControls, scen
         scene.children.forEach((group) => {
             if (group.name.split("_")[1] === "grid") group.children[0].visible = false;
         });
+        removeContextMenu(context_target);
     })
 
     document.getElementById("ROOM_EDIT_MODE_btn").addEventListener("click", () => {
